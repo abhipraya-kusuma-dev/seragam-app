@@ -9,30 +9,28 @@ use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
 {
-    /**
-     * Seed the application's database.
-     */
-    public function run(): void
-    {
-        // \App\Models\User::factory(10)->create();
+  /**
+   * Seed the application's database.
+   */
+  public function run(): void
+  {
+    // \App\Models\User::factory(10)->create();
 
-        // \App\Models\User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
+    // \App\Models\User::factory()->create([
+    //     'name' => 'Test User',
+    //     'email' => 'test@example.com',
+    // ]);
 
-        User::create([
-            'name' => 'admgudang',
-            'role' => 'admin-gudang',
-            'password' => bcrypt('pwadmgudang')
-        ]);
+    User::create([
+      'name' => 'admgudang',
+      'role' => 'admin-gudang',
+      'password' => bcrypt('pwadmgudang')
+    ]);
 
-        User::create([
-            'name' => 'admukur',
-            'role' => 'admin-ukur',
-            'password' => bcrypt('pwadmukur')
-        ]);
-
-
-    }
+    User::create([
+      'name' => 'admukur',
+      'role' => 'admin-ukur',
+      'password' => bcrypt('pwadmukur')
+    ]);
+  }
 }

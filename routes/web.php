@@ -1,6 +1,9 @@
 <?php
 
+use App\Http\Controllers\GudangController;
+use App\Http\Controllers\UkurController;
 use App\Http\Controllers\UserController;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,15 +17,31 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/login', function () {
-    return view('login');
-})->middleware('guest')->name('login');
+Route::get('/redirect', function () {
+  if (Gate::allows('read-gudang')) {
+    return redirect('/gudang');
+  }
 
-Route::get('/beranda', function(){
-    return view('beranda');
+  if (Gate::allows('read-ukur')) {
+    return redirect('/ukur');
+  }
 })->middleware('auth');
 
-Route::post('/login', [UserController::class, 'login'])->middleware('guest');
+Route::controller(UserController::class)->group(function () {
+  Route::get('/login', 'login')->middleware('guest')->name('login');
 
-Route::get('/logout', [UserController::class, 'logout'])->middleware('auth');
+  Route::post('/login', 'authenticate')->middleware('guest');
+  Route::post('/logout', 'logout')->middleware('auth');
+});
 
+Route::controller(GudangController::class)->middleware('auth')->prefix('gudang')->group(function () {
+  Route::get('/', 'index')->can('read-gudang');
+  Route::get('/{nomor_urut}', 'lihatOrderanMasuk')->can('read-gudang');
+  Route::get('/bikin', 'inputStokSeragam')->can('create-gudang');
+});
+
+Route::controller(UkurController::class)->middleware('auth')->prefix('ukur')->group(function () {
+  Route::get('/', 'index')->can('read-ukur');
+  Route::get('/{nomor_urut}', 'lihatOrderanMasuk')->can('read-ukur');
+  Route::get('/bikin', 'inputUkurSeragam')->can('create-ukur');
+});
