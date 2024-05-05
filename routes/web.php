@@ -35,9 +35,14 @@ Route::controller(UserController::class)->group(function () {
 });
 
 Route::controller(GudangController::class)->middleware('auth')->prefix('gudang')->group(function () {
-  Route::get('/', 'index')->can('read-gudang');
+  Route::get('/order', 'daftarOrder')->can('read-gudang');
   Route::get('/{nomor_urut}', 'lihatOrderanMasuk')->can('read-gudang');
-  Route::get('/bikin', 'inputStokSeragam')->can('create-gudang');
+  Route::put('/{nomor_urut}/update', 'updateOrderanMasuk')->can('update-gudang');
+
+  Route::get('/seragam', 'daftarSeragam')->can('read-gudang');
+
+  Route::get('/seragam/bikin', 'bikinSeragam')->can('create-gudang');
+  Route::post('/seragam/bikin', 'inputBikinStokSeragam')->can('create-gudang');
 });
 
 Route::controller(UkurController::class)->middleware('auth')->prefix('ukur')->group(function () {

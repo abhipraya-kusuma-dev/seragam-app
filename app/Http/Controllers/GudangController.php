@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use Exception;
 use Illuminate\Http\Request;
 
 class GudangController extends Controller
 {
-  public function index()
+  public function daftarOrder()
   {
-    return view('gudang.index');
+    return view('gudang.daftar-order');
   }
 
   public function lihatOrderanMasuk($nomor_urut)
@@ -18,8 +19,37 @@ class GudangController extends Controller
     ]);
   }
 
-  public function inputStokSeragam()
+  public function updateOrderanMasuk($nomor_urut, Request $request)
   {
-    return view('gudang.create');
+    // TODO: Validasi data
+
+    try {
+      // TODO: Update logic
+
+    } catch (Exception $e) {
+      return back()->with('update-error', $e->getMessage());
+    }
+  }
+
+  public function daftarSeragam()
+  {
+    return view('gudang.daftar-seragam');
+  }
+
+  public function bikinSeragam()
+  {
+    return view('gudang.bikin-seragam');
+  }
+
+  public function inputBikinSeragam(Request $request)
+  {
+    // TODO: Validasi data
+
+    try {
+      // TODO: Create logic
+
+    } catch (Exception $e) {
+      return back()->with('create-error', $e->getMessage());
+    }
   }
 }
