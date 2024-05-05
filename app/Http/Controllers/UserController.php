@@ -22,7 +22,7 @@ class UserController extends Controller
 
     if (Auth::attempt($incomingFields)) {
       if (Gate::allows('read-gudang')) {
-        return redirect()->intended('/gudang');
+        return redirect()->intended('/gudang/order');
       }
 
       if (Gate::allows('read-ukur')) {
