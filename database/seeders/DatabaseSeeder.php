@@ -63,6 +63,7 @@ class DatabaseSeeder extends Seeder
       'harga' => 130000,
     ]);
 
+    // NOTE: bisa order 2 baju kah per orang ?
     Order::create([
       'nomor_urut' => 'P980',
       'jenjang' => 'smp',

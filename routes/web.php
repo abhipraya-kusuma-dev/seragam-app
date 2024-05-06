@@ -27,8 +27,8 @@ Route::get('/redirect', function () {
   }
 })->middleware('auth');
 
-Route::get('/', function(){
-  return redirect('/login');
+Route::get('/', function () {
+  return redirect('/redirect');
 });
 
 Route::controller(UserController::class)->group(function () {
