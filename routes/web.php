@@ -19,13 +19,17 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/redirect', function () {
   if (Gate::allows('read-gudang')) {
-    return redirect('/gudang');
+    return redirect('/gudang/order');
   }
 
   if (Gate::allows('read-ukur')) {
     return redirect('/ukur');
   }
 })->middleware('auth');
+
+Route::get('/', function(){
+  return redirect('/login');
+});
 
 Route::controller(UserController::class)->group(function () {
   Route::get('/login', 'login')->middleware('guest')->name('login');
