@@ -13,12 +13,11 @@ return new class extends Migration
   {
     Schema::create('orders', function (Blueprint $table) {
       $table->id();
-      $table->foreignId('seragam_id')->references('id')->on('seragams');
       $table->string('nomor_urut');
       $table->string('jenjang');
       $table->string('nama_lengkap');
       $table->string('jenis_kelamin');
-      $table->string('status'); // Enum: on-progress, draft
+      $table->string('status'); // Enum: on-process, draft
       $table->timestamps();
     });
   }

@@ -4,6 +4,9 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
+use App\Models\Order;
+use App\Models\Seragam;
+use App\Models\Status;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 
@@ -31,6 +34,79 @@ class DatabaseSeeder extends Seeder
       'name' => 'admukur',
       'role' => 'admin-ukur',
       'password' => bcrypt('pwadmukur')
+    ]);
+
+    Seragam::create([
+      'nama_barang' => 'Celana Biru',
+      'jenjang' => 'smp',
+      'jenis_kelamin' => 'laki-laki',
+      'ukuran' => 'XL',
+      'stok' => 10, // NOTE: berkurang ketika order selesai
+      'harga' => 100000,
+    ]);
+
+    Seragam::create([
+      'nama_barang' => 'Celana Cream',
+      'jenjang' => 'smp,smk,sma',
+      'jenis_kelamin' => 'laki-laki',
+      'ukuran' => 'XL',
+      'stok' => 10, // NOTE: berkurang ketika order selesai
+      'harga' => 120000,
+    ]);
+
+    Seragam::create([
+      'nama_barang' => 'Baju Batik',
+      'jenjang' => 'smp,smk,sma',
+      'jenis_kelamin' => 'laki-laki',
+      'ukuran' => 'XL',
+      'stok' => 18, // NOTE: berkurang ketika order selesai
+      'harga' => 130000,
+    ]);
+
+    Order::create([
+      'nomor_urut' => 'P980',
+      'jenjang' => 'smp',
+      'nama_lengkap' => 'John Doe',
+      'jenis_kelamin' => 'laki-laki',
+      'status' => 'draft',
+    ]);
+
+    Status::create([
+      'seragam_id' => 1,
+      'order_id' => 1,
+      'tersedia' => false
+    ]);
+
+    Status::create([
+      'seragam_id' => 2,
+      'order_id' => 1,
+      'tersedia' => false
+    ]);
+
+    Order::create([
+      'nomor_urut' => 'P981',
+      'jenjang' => 'smp',
+      'nama_lengkap' => 'Yanto',
+      'jenis_kelamin' => 'laki-laki',
+      'status' => 'on-process',
+    ]);
+
+    Status::create([
+      'seragam_id' => 1,
+      'order_id' => 2,
+      'tersedia' => false
+    ]);
+
+    Status::create([
+      'seragam_id' => 2,
+      'order_id' => 2,
+      'tersedia' => false
+    ]);
+
+    Status::create([
+      'seragam_id' => 3,
+      'order_id' => 2,
+      'tersedia' => false
     ]);
   }
 }

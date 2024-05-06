@@ -17,7 +17,7 @@ return new class extends Migration
       $table->string('jenjang');
       $table->string('jenis_kelamin');
       $table->string('ukuran');
-      $table->integer('stock');
+      $table->integer('stok');
       $table->integer('harga');
       $table->timestamps();
     });

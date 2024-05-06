@@ -13,8 +13,8 @@ return new class extends Migration
   {
     Schema::create('statuses', function (Blueprint $table) {
       $table->id();
-      $table->foreignId('seragam_id')->references('id')->on('seragams');
-      $table->foreignId('order_id')->references('id')->on('orders');
+      $table->foreignId('seragam_id')->references('id')->on('seragams')->cascadeOnDelete();
+      $table->foreignId('order_id')->references('id')->on('orders')->cascadeOnDelete();
       $table->boolean('tersedia')->default(false);
       $table->timestamps();
     });

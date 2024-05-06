@@ -37,13 +37,20 @@ DB_DATABASE=seragam_app
 DB_USERNAME=root
 DB_PASSWORD=
 
+# Socket Server
+SOCKET_IO_SERVER='127.0.0.1:3000'
+
 php artisan migrate # Migrate database schema
 ```
 
 5. Run your app
 
 ```bash
+# Laravel app
 php artisan serve
+
+# Socket IO
+node server.cjs
 ```
 
 ## Conventional Commit Messages

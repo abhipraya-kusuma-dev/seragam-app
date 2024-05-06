@@ -2,18 +2,39 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class GudangController extends Controller
 {
-  public function daftarOrder()
+  public function daftarOrder(Request $request)
   {
-    return view('gudang.daftar-order');
+    $status = $request->query('status', 'on-process');
+
+    $orders = DB::table('orders')
+      ->where('status', $status)
+      ->select('nomor_urut', 'jenjang', 'nama_lengkap', 'created_at as order_masuk')
+      ->get();
+
+    foreach ($orders as $order) {
+      $order->order_masuk = Carbon::parse($order->order_masuk)
+        ->timezone('Asia/Jakarta')
+        ->format('d/m/y | h:m');
+    }
+
+    return view('gudang.daftar-order', $orders);
   }
 
   public function lihatOrderanMasuk($nomor_urut)
   {
+    $order = DB::table('orders')
+      ->join('statuses', 'statuses.order_id', 'orders.id')
+      ->join('seragams', 'seragams.id', 'statuses.seragam_id')
+      ->where('orders.id', $nomor_urut)
+      ->first();
+
     return view('gudang.order-detail', [
       'nomor_urut' => $nomor_urut
     ]);
