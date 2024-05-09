@@ -43,6 +43,9 @@
                         <td class="px-2 text-left">{{ $order->nama_lengkap }}</td>
                         <td class="px-2 text-left">{{ strtoupper($order->jenjang) }}</td>
                         <td class="px-2 text-left bg-[#FF7878]">{{ $order->order_masuk }}</td>
+                        @if( request()->query('status') === 'selesai')
+                        <td class="px-2 text-left bg-[#FF7878]">Order Keluar</td>
+                        @endif
                         <td class="px-2 text-left bg-[#78BEFF]"><a href="/gudang/order/{{ $order->nomor_urut }}" class="underline">Lihat Order</a></td>
                     </tr>
                 @endforeach

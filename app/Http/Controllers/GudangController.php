@@ -40,7 +40,7 @@ class GudangController extends Controller
       }
     }
 
-    dd($orders);
+    
 
     return view('gudang.daftar-order', [
       'orders' => $orders
@@ -90,7 +90,7 @@ class GudangController extends Controller
             ->where('nomor_urut', $nomor_urut)
             ->update([
               'complete_timestamp' => now(),
-              'status' => 'complete',
+              'status' => 'selesai',
             ]);
           break;
       }

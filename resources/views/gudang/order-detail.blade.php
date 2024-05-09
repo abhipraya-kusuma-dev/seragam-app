@@ -114,6 +114,7 @@
                     label.classList.add("bg-red-300");
                     label.querySelector(".tersedia-status").textContent = "Belum"
                     }
+                    
                 }
 
                 
