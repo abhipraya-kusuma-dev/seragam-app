@@ -15,6 +15,7 @@ return new class extends Migration
       $table->id();
       $table->foreignId('seragam_id')->references('id')->on('seragams')->cascadeOnDelete();
       $table->foreignId('order_id')->references('id')->on('orders')->cascadeOnDelete();
+      $table->integer('kuantitas')->unsigned();
       $table->boolean('tersedia')->default(false);
       $table->timestamps();
     });

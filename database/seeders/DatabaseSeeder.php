@@ -75,12 +75,14 @@ class DatabaseSeeder extends Seeder
     Status::create([
       'seragam_id' => 1,
       'order_id' => 1,
+      'kuantitas' => 2,
       'tersedia' => false
     ]);
 
     Status::create([
       'seragam_id' => 2,
       'order_id' => 1,
+      'kuantitas' => 1,
       'tersedia' => false
     ]);
 
@@ -95,18 +97,21 @@ class DatabaseSeeder extends Seeder
     Status::create([
       'seragam_id' => 1,
       'order_id' => 2,
+      'kuantitas' => 1,
       'tersedia' => false
     ]);
 
     Status::create([
       'seragam_id' => 2,
       'order_id' => 2,
+      'kuantitas' => 1,
       'tersedia' => false
     ]);
 
     Status::create([
       'seragam_id' => 3,
       'order_id' => 2,
+      'kuantitas' => 2,
       'tersedia' => false
     ]);
   }

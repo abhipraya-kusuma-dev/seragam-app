@@ -24,6 +24,7 @@
             @endforeach
         </div>
 
-        <button type="submit">Update Data Order</button>
+        <button type="submit" name="action" value="draft">Update Data Order (Draft)</button>
+        <button type="submit" name="action" value="complete">Update Data Order (Siap)</button>
     </form>
 @endsection

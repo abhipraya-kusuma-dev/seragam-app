@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Carbon\Carbon;
 use Exception;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -11,20 +12,39 @@ class GudangController extends Controller
 {
   public function daftarOrder(Request $request)
   {
+    $search = $request->query('search');
+
     $status = $request->query('status', 'on-process');
 
     $orders = DB::table('orders')
+      ->when($search, function (Builder $builder) use ($search) {
+        $search = strtolower($search);
+
+        return $builder
+          ->whereRaw('LOWER(nomor_urut) like ?', ["%$search%"])
+          ->orWhereRaw('LOWER(nama_lengkap) like ?', ["%$search%"]);
+      })
       ->where('status', $status)
-      ->select('nomor_urut', 'jenjang', 'nama_lengkap', 'created_at as order_masuk')
+      ->select('nomor_urut', 'jenjang', 'nama_lengkap', 'created_at as order_masuk', 'complete_timestamp as order_keluar')
       ->get();
 
     foreach ($orders as $order) {
       $order->order_masuk = Carbon::parse($order->order_masuk)
         ->timezone('Asia/Jakarta')
         ->format('d/m/y | h:m');
+
+      if ($order->order_keluar) {
+        $order->order_keluar = Carbon::parse($order->order_keluar)
+          ->timezone('Asia/Jakarta')
+          ->format('d/m/y | h:m');
+      }
     }
 
-    return view('gudang.daftar-order', $orders);
+    dd($orders);
+
+    return view('gudang.daftar-order', [
+      'orders' => $orders
+    ]);
   }
 
   public function lihatOrderanMasuk($nomor_urut)
@@ -37,13 +57,10 @@ class GudangController extends Controller
       ->join('statuses', 'statuses.order_id', 'orders.id')
       ->join('seragams', 'seragams.id', 'statuses.seragam_id')
       ->where('orders.nomor_urut', $nomor_urut)
-      ->select('seragams.id', 'seragams.nama_barang', 'seragams.ukuran', 'statuses.tersedia')
+      ->select('seragams.id', 'seragams.nama_barang', 'seragams.ukuran', 'statuses.tersedia', 'statuses.kuantitas')
       ->get();
 
-    foreach ($seragams as $seragam) {
-      $seragam->qty = 1;
-      $order->seragams[] = $seragam;
-    }
+    $order->seragams = $seragams;
 
     return view('gudang.order-detail', [
       'nomor_urut' => $nomor_urut,
@@ -60,6 +77,24 @@ class GudangController extends Controller
     DB::beginTransaction();
 
     try {
+      switch ($request->input('action')) {
+        case 'draft':
+          DB::table('orders')
+            ->where('nomor_urut', $nomor_urut)
+            ->update([
+              'status' => 'draft'
+            ]);
+          break;
+        case 'complete':
+          DB::table('orders')
+            ->where('nomor_urut', $nomor_urut)
+            ->update([
+              'complete_timestamp' => now(),
+              'status' => 'complete',
+            ]);
+          break;
+      }
+
       $seragams = DB::table('orders')
         ->join('statuses', 'statuses.order_id', 'orders.id')
         ->where('orders.nomor_urut', $nomor_urut)
