@@ -114,7 +114,7 @@ class GudangController extends Controller
 
       DB::commit();
 
-      return back()->with('update-success', 'Berhasil mengubah data order');
+      return back()->with('update-success', 'Berhasil mengubah data order!');
     } catch (Exception $e) {
       DB::rollBack();
       return back()->with('update-error', $e->getMessage());
