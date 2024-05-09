@@ -40,8 +40,8 @@ Route::controller(UserController::class)->group(function () {
 
 Route::controller(GudangController::class)->middleware('auth')->prefix('gudang')->group(function () {
   Route::get('/order', 'daftarOrder')->can('read-gudang');
-  Route::get('/{nomor_urut}', 'lihatOrderanMasuk')->can('read-gudang');
-  Route::put('/{nomor_urut}/update', 'updateOrderanMasuk')->can('update-gudang');
+  Route::get('/order/{nomor_urut}', 'lihatOrderanMasuk')->can('read-gudang');
+  Route::put('/order/{nomor_urut}/update', 'updateOrderanMasuk')->can('update-gudang');
 
   Route::get('/seragam', 'daftarSeragam')->can('read-gudang');
 

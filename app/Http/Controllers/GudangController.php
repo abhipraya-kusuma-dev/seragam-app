@@ -24,7 +24,7 @@ class GudangController extends Controller
         ->format('d/m/y | h:m');
     }
 
-    return view('gudang.daftar-order', $orders);
+    return view('gudang.daftar-order', ['orders'=>$orders]);
   }
 
   public function lihatOrderanMasuk($nomor_urut)
@@ -79,7 +79,7 @@ class GudangController extends Controller
 
       DB::commit();
 
-      return back()->with('update-success', 'Berhasil mengubah data order');
+      return back()->with('update-success', 'Berhasil mengubah data order!');
     } catch (Exception $e) {
       DB::rollBack();
       return back()->with('update-error', $e->getMessage());
