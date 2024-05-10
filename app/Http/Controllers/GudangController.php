@@ -134,9 +134,27 @@ class GudangController extends Controller
   public function inputBikinSeragam(Request $request)
   {
     // TODO: Validasi data
+    $validatedData = $request->validate([
+      'jenjang' => 'required|in:SD,SMP,SMA,SMK',
+      'jenis_kelamin' => 'required|in:cowo,cewe',
+      'nama_barang' => 'required',
+      'ukuran' => 'required',
+      'stok' => 'required|numeric|min:0',
+      'harga' => 'required|numeric|min:1000'
+    ]);
 
     try {
       // TODO: Create logic
+      DB::table('seragams')
+        ->insert([
+          'nama_barang' => $validatedData['nama_barang'],
+          'jenjang' => $validatedData['jenjang'],
+          'jenis_kelamin' => $validatedData['jenis_kelamin'],
+          'ukuran' => $validatedData['ukuran'],
+          'stok' => $validatedData['stok'],
+          'harga' => $validatedData['harga']
+        ]);
+        return back()->with('create-success', "berhasil membuat seragam");
 
     } catch (Exception $e) {
       return back()->with('create-error', $e->getMessage());
