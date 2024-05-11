@@ -46,7 +46,9 @@ Route::controller(GudangController::class)->middleware('auth')->prefix('gudang')
   Route::get('/seragam', 'daftarSeragam')->can('read-gudang');
 
   Route::get('/seragam/bikin', 'bikinSeragam')->can('create-gudang');
-  Route::post('/seragam/bikin', 'inputBikinStokSeragam')->can('create-gudang');
+  Route::post('/seragam/bikin', 'inputBikinSeragam')->can('create-gudang');
+  Route::patch('/seragam/update/{id}', 'updateSeragam')->can('update-gudang');
+  Route::delete('/seragam/delete/{id}', 'deleteSeragam')->can('delete-gudang');
 });
 
 Route::controller(UkurController::class)->middleware('auth')->prefix('ukur')->group(function () {
