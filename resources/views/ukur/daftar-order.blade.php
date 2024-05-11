@@ -1,5 +1,5 @@
 @extends('layout.main')
 
 @section('content')
-    <h1>Halaman input ukuran seragam siswa</h1>
+    <h1>Daftar Order ukur</h1>
 @endsection
