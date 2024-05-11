@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Helper\StringHelper;
+use App\Models\Seragam;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Database\Query\Builder;
@@ -199,19 +200,48 @@ class GudangController extends Controller
 
     try {
       // TODO: Create logic
-      DB::table('seragams')
-        ->insert([
-          'nama_barang' => $validatedData['nama_barang'],
-          'jenjang' => $validatedData['jenjang'],
-          'jenis_kelamin' => $validatedData['jenis_kelamin'],
-          'ukuran' => $validatedData['ukuran'],
-          'stok' => $validatedData['stok'],
-          'harga' => $validatedData['harga']
-        ]);
+      Seragam::create([
+        'nama_barang' => $validatedData['nama_barang'],
+        'jenjang' => $validatedData['jenjang'],
+        'jenis_kelamin' => $validatedData['jenis_kelamin'],
+        'ukuran' => $validatedData['ukuran'],
+        'stok' => $validatedData['stok'],
+        'harga' => $validatedData['harga']
+      ]);
 
-      return back()->with('create-success', "berhasil membuat seragam");
+      return back()->with('create-success', "Berhasil membuat seragam!");
     } catch (Exception $e) {
       return back()->with('create-error', $e->getMessage());
+    }
+  }
+  public function updateSeragam(Request $request, $id)
+  {
+
+    $validatedData = $request->validate([
+      'jenjang' => 'required|in:sd,smp,sma,smk',
+      'jenis_kelamin' => 'required|in:cowo,cewe',
+      'nama_barang' => 'required',
+      'ukuran' => 'required',
+      'stok' => 'required|numeric|min:0',
+      'harga' => 'required|numeric|min:1000'
+    ]);
+
+    try {
+      Seragam::where('id', $id)->update($validatedData);
+      return back()->with('update-success', 'berhasil update');
+    } catch (Exception $e) {
+      return back()->with('update-error', 'gagal update');
+    }
+  }
+  public function deleteSeragam($id)
+  {
+    try {
+      DB::table('seragams')
+        ->where('id', $id)->delete();
+
+      return back()->with('delete-success', 'berhasil delete');
+    } catch (Exception $e) {
+      return back()->with('delete-error', 'gagal delete');
     }
   }
 }
