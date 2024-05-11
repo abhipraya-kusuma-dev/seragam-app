@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helper\StringHelper;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Database\Query\Builder;
@@ -40,7 +41,7 @@ class GudangController extends Controller
       }
     }
 
-    
+
 
     return view('gudang.daftar-order', [
       'orders' => $orders
@@ -123,19 +124,72 @@ class GudangController extends Controller
 
   public function daftarSeragam()
   {
-    return view('gudang.daftar-seragam');
-  }
+    $seragams = DB::table('seragams')
+      ->select('id', 'nama_barang', 'jenjang', 'ukuran', 'stok', 'harga')
+      ->get();
 
-  public function bikinSeragam()
-  {
-    return view('gudang.bikin-seragam');
+    $data = [];
+    $pointer = 0;
+
+    $list_ukuran_fix = ['S', 'M', 'XL', 'XXL', 'XXXL', 'XXXXL', 'XXXXXL', '11', '13', '15', '17', '19', '21', '23', '25', '27', '29', '31', '33', '35', '37', '39', '41'];
+
+    while ($seragams->count() > $pointer) {
+      $isExists = false;
+
+      // Check duplicate entries for $seragams[$pointer]->nama_barang on $data array
+      foreach ($data as $d) {
+        if ($d['nama_barang'] === $seragams[$pointer]->nama_barang) {
+          $isExists = true;
+
+          break;
+        }
+      }
+
+      // Skip the loop so $data array wouldn't have a new $seragam
+      if ($isExists) {
+        $pointer += 1;
+
+        continue;
+      };
+
+      // If $seragams[$pointer]->nama_barang is completely new and didn't exists in $data array, then
+      $data[] = [
+        'id' => $seragams[$pointer]->id,
+        'nama_barang' => $seragams[$pointer]->nama_barang,
+        'jenjang' => $seragams[$pointer]->jenjang,
+        'ukuran' => $seragams[$pointer]->ukuran,
+        'stok' => $seragams[$pointer]->stok,
+        'harga' => StringHelper::hargaIntToRupiah($seragams[$pointer]->harga),
+        'semua_ukuran' => [],
+      ];
+
+      foreach ($seragams as $seragam) {
+        if ($seragams[$pointer]->nama_barang === $seragam->nama_barang && $seragams[$pointer]->id !== $seragam->id) {
+          $data[$pointer]['semua_ukuran'][] = [
+            'id' => $seragam->id,
+            'nama_barang' => $seragam->nama_barang,
+            'jenjang' => $seragam->jenjang,
+            'ukuran' => $seragam->ukuran,
+            'stok' => $seragam->stok,
+            'harga' => StringHelper::hargaIntToRupiah($seragam->harga),
+          ];
+        }
+      }
+
+      $pointer += 1;
+    }
+
+    return view('gudang.daftar-seragam', [
+      'data' => $data,
+      'list_ukuran_fix' => $list_ukuran_fix
+    ]);
   }
 
   public function inputBikinSeragam(Request $request)
   {
     // TODO: Validasi data
     $validatedData = $request->validate([
-      'jenjang' => 'required|in:SD,SMP,SMA,SMK',
+      'jenjang' => 'required|in:sd,smp,sma,smk',
       'jenis_kelamin' => 'required|in:cowo,cewe',
       'nama_barang' => 'required',
       'ukuran' => 'required',
@@ -154,8 +208,8 @@ class GudangController extends Controller
           'stok' => $validatedData['stok'],
           'harga' => $validatedData['harga']
         ]);
-        return back()->with('create-success', "berhasil membuat seragam");
 
+      return back()->with('create-success', "berhasil membuat seragam");
     } catch (Exception $e) {
       return back()->with('create-error', $e->getMessage());
     }

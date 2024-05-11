@@ -63,6 +63,15 @@ class DatabaseSeeder extends Seeder
       'harga' => 130000,
     ]);
 
+    Seragam::create([
+      'nama_barang' => 'Celana Biru',
+      'jenjang' => 'smp',
+      'jenis_kelamin' => 'laki-laki',
+      'ukuran' => 'M',
+      'stok' => 17, // NOTE: berkurang ketika order selesai
+      'harga' => 100000,
+    ]);
+
     // NOTE: bisa order 2 baju kah per orang ?
     Order::create([
       'nomor_urut' => 'P980',
