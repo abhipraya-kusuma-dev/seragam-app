@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Order;
 use Exception;
 use Illuminate\Http\Request;
+use App\Models\Status;
+use Illuminate\Support\Facades\DB;
 
 class UkurController extends Controller
 {
@@ -32,13 +35,38 @@ class UkurController extends Controller
   public function inputBikinOrder(Request $request)
   {
     // TODO: validasi data order
+    $validatedData = $request->validate([
+      'jenjang' => 'required|in:sd,smp,sma,smk',
+      'nomor_urut' => 'required',
+      'nama_lengkap' => 'required|min:3',
+      'jenis_kelamin' => 'required|in:cowo,cewe',
+      'seragam_id.*' => 'required|numeric|exists:seragams,id',
+      'qty.*' => 'required|numeric|min:1'
+    ]);
+    
 
     try {
       // TODO: logic bikin order baru
+      DB::beginTransaction();
 
+      $order = Order::create([
+      'jenjang' => $validatedData['jenjang'],
+      'nomor_urut' => $validatedData['nomor_urut'],
+      'nama_lengkap' => $validatedData['nama_lengkap'],
+      'jenis_kelamin' => $validatedData['jenis_kelamin'],
+        ]);
+        foreach($validatedData['seragam_id'] as $index => $id){
+          Status::create([
+            'seragam_id' => $id,
+           'order_id' => $order->id,
+           'kuantitas' => $validatedData['qty'][$index]
+          ]); 
+        }
+        DB::commit();
       return "Berhasil bikin order";
     } catch (Exception $e) {
-      return "Gagal bikin order";
+      DB::rollBack();
+      return "Gagal bikin order:".$e->getMessage();
     }
   }
 
