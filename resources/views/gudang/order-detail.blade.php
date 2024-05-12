@@ -108,7 +108,7 @@
                         label.classList.add("bg-green-300");
                         label.querySelector(".tersedia-status").textContent = "Sudah"           
                     }
-                } else {
+                } else{
                     if (!document.querySelector(`.seragam-input[id="${seragamId}"]:checked`)) {
                     label.classList.remove("bg-green-300");
                     label.classList.add("bg-red-300");
