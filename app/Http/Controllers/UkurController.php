@@ -44,7 +44,6 @@ class UkurController extends Controller
       'qty.*' => 'required|numeric|min:1'
     ]);
 
-
     try {
       // TODO: logic bikin order baru
       DB::beginTransaction();
@@ -55,6 +54,7 @@ class UkurController extends Controller
         'nama_lengkap' => $validatedData['nama_lengkap'],
         'jenis_kelamin' => $validatedData['jenis_kelamin'],
       ]);
+
       foreach ($validatedData['seragam_id'] as $index => $id) {
         Status::create([
           'seragam_id' => $id,
@@ -62,11 +62,14 @@ class UkurController extends Controller
           'kuantitas' => $validatedData['qty'][$index]
         ]);
       }
+
       DB::commit();
-      return "Berhasil bikin order";
+      // return "Berhasil bikin order";
+      return back()->with('create-success', 'Berhasil bikin order');
     } catch (Exception $e) {
       DB::rollBack();
-      return "Gagal bikin order:" . $e->getMessage();
+      // return "Gagal bikin order:" . $e->getMessage();
+      return back()->with('create-error', 'Gagal bikin order ' . $e->getMessage());
     }
   }
 
@@ -77,26 +80,62 @@ class UkurController extends Controller
     ]);
   }
 
-  public function updateOrder(Request $request, $nomor_urut)
+  public function updateOrder(Request $request, $id)
   {
     // TODO: validasi data order
+    $validatedData = $request->validate([
+      'jenjang' => 'required|in:sd,smp,sma,smk',
+      'nomor_urut' => 'required',
+      'nama_lengkap' => 'required|min:3',
+      'jenis_kelamin' => 'required|in:cowo,cewe',
+      'seragam_id.*' => 'required|numeric|exists:seragams,id',
+      'qty.*' => 'required|numeric|min:1'
+    ]);
+
 
     try {
       // TODO: logic update order
+      DB::beginTransaction();
 
-      return 'Berhasil update order';
+      $order = Order::findOrFail($id);
+
+      $order->jenjang = $validatedData['jenjang'];
+      $order->nomor_urut = $validatedData['nomor_urut'];
+      $order->nama_lengkap = $validatedData['nama_lengkap'];
+      $order->jenis_kelamin = $validatedData['jenis_kelamin'];
+
+      $order->save();
+
+      foreach ($validatedData['seragam_id'] as $index => $seragamId) {
+        // TODO: klo seragam nya berkurang gimana?
+        Status::where('order_id', $id)->update([
+          'seragam_id' => $seragamId,
+          'kuantitas' => $validatedData['qty'][$index]
+        ]);
+      }
+
+      DB::commit();
+
+      // return 'Berhasil update order';
+      return back()->with('update-success', 'Berhasil update order');
     } catch (Exception $e) {
-      return 'Gagal update order';
+      DB::rollBack();
+      // return 'Gagal update order';
+      return back()->with('update-error', 'Gagal update order');
     }
   }
 
-  public function deleteOrder($nomor_urut)
+  public function deleteOrder($id)
   {
     try {
+      $order = DB::table('orders')->where('id', $id);
+      $order->delete();
 
-      return 'Berhasil hapus order';
+      // return 'Berhasil hapus order';
+      return back()->with('delete-success', 'Berhasil hapus order');
     } catch (Exception $e) {
-      return 'Gagal hapus order';
+      // return 'Gagal hapus order' . $e->getMessage();
+      return back()->with('delete-error', 'Gagal hapus order' . $e->getMessage());
     }
   }
 }

@@ -254,7 +254,6 @@ class GudangController extends Controller
       $validatedData['jenis_kelamin'] = implode(',', $validatedData['jenis_kelamin']);
 
       Seragam::where('id', $id)->update($validatedData);
-
       return back()->with('update-success', 'berhasil update');
     } catch (Exception $e) {
       return back()->with('update-error', 'gagal update');
