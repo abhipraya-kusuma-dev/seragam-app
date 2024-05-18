@@ -39,7 +39,7 @@ class DatabaseSeeder extends Seeder
     Seragam::create([
       'nama_barang' => 'Celana Biru',
       'jenjang' => 'smp',
-      'jenis_kelamin' => 'laki-laki',
+      'jenis_kelamin' => 'cowo',
       'ukuran' => 'XL',
       'stok' => 10, // NOTE: berkurang ketika order selesai
       'harga' => 100000,
@@ -48,7 +48,7 @@ class DatabaseSeeder extends Seeder
     Seragam::create([
       'nama_barang' => 'Celana Cream',
       'jenjang' => 'smp,smk,sma',
-      'jenis_kelamin' => 'laki-laki',
+      'jenis_kelamin' => 'cowo',
       'ukuran' => 'XL',
       'stok' => 10, // NOTE: berkurang ketika order selesai
       'harga' => 120000,
@@ -57,7 +57,7 @@ class DatabaseSeeder extends Seeder
     Seragam::create([
       'nama_barang' => 'Baju Batik',
       'jenjang' => 'smp,smk,sma',
-      'jenis_kelamin' => 'laki-laki',
+      'jenis_kelamin' => 'cowo',
       'ukuran' => 'XL',
       'stok' => 18, // NOTE: berkurang ketika order selesai
       'harga' => 130000,
@@ -66,8 +66,26 @@ class DatabaseSeeder extends Seeder
     Seragam::create([
       'nama_barang' => 'Celana Biru',
       'jenjang' => 'smp',
-      'jenis_kelamin' => 'laki-laki',
+      'jenis_kelamin' => 'cowo',
       'ukuran' => 'M',
+      'stok' => 17, // NOTE: berkurang ketika order selesai
+      'harga' => 100000,
+    ]);
+
+    Seragam::create([
+      'nama_barang' => 'Rok Biru',
+      'jenjang' => 'smp',
+      'jenis_kelamin' => 'cewe',
+      'ukuran' => 'L',
+      'stok' => 17, // NOTE: berkurang ketika order selesai
+      'harga' => 100000,
+    ]);
+
+    Seragam::create([
+      'nama_barang' => 'Topi Biru',
+      'jenjang' => 'smp',
+      'jenis_kelamin' => 'cewe,cowo',
+      'ukuran' => 'L',
       'stok' => 17, // NOTE: berkurang ketika order selesai
       'harga' => 100000,
     ]);
@@ -77,7 +95,7 @@ class DatabaseSeeder extends Seeder
       'nomor_urut' => 'P980',
       'jenjang' => 'smp',
       'nama_lengkap' => 'John Doe',
-      'jenis_kelamin' => 'laki-laki',
+      'jenis_kelamin' => 'cowo',
       'status' => 'draft',
     ]);
 
@@ -99,7 +117,7 @@ class DatabaseSeeder extends Seeder
       'nomor_urut' => 'P981',
       'jenjang' => 'smp',
       'nama_lengkap' => 'Yanto',
-      'jenis_kelamin' => 'laki-laki',
+      'jenis_kelamin' => 'cowo',
       'status' => 'on-process',
     ]);
 
