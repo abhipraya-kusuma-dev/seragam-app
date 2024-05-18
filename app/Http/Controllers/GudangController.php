@@ -209,7 +209,7 @@ class GudangController extends Controller
         'harga' => $validatedData['harga']
       ]);
 
-      return back()->with('create-success', "Berhasil membuat seragam!");
+      return with('create-success', 'berhasil membuat seragam');
     } catch (Exception $e) {
       return back()->with('create-error', $e->getMessage());
     }
@@ -225,12 +225,22 @@ class GudangController extends Controller
       'stok' => 'required|numeric|min:0',
       'harga' => 'required|numeric|min:1000'
     ]);
+    if(isset($validatedData['jenjang'])){
+      $validatedData['jenjang'] = implode(',', $validatedData['jenjang']);
+    }
+    if(isset($validatedData['jenis_kelamin'])){
+      $validatedData['jenis_kelamin'] = implode(',', $validatedData['jenis_kelamin']);
+    }
+    
+    
 
     try {
       Seragam::where('id', $id)->update($validatedData);
-      return back()->with('update-success', 'berhasil update');
+      // return back()->with('update-success', 'berhasil update');
+      return 'berhasil update';
     } catch (Exception $e) {
-      return back()->with('update-error', 'gagal update');
+      // return back()->with('update-error', 'gagal update');
+      return 'gagal update';
     }
   }
   public function deleteSeragam($id)
