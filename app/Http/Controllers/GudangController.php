@@ -127,13 +127,13 @@ class GudangController extends Controller
   public function daftarSeragam()
   {
     $seragams = DB::table('seragams')
-      ->select('id', 'nama_barang', 'jenjang', 'ukuran', 'stok', 'harga')
+      ->select('id', 'nama_barang', 'jenjang', 'jenis_kelamin', 'ukuran', 'stok', 'harga')
       ->get();
 
     $data = [];
     $pointer = 0;
 
-    $list_ukuran_fix = ['S', 'M', 'XL', 'XXL', 'XXXL', 'XXXXL', 'XXXXXL', '11', '13', '15', '17', '19', '21', '23', '25', '27', '29', '31', '33', '35', '37', '39', '41'];
+    $list_ukuran_fix = ['S', 'M', 'L', 'XL', 'XXL', 'XXXL', 'XXXXL', 'XXXXXL', '11', '13', '15', '17', '19', '21', '23', '25', '27', '29', '31', '33', '35', '37', '39', '41'];
 
     while ($seragams->count() > $pointer) {
       $isExists = false;
@@ -159,6 +159,7 @@ class GudangController extends Controller
         'id' => $seragams[$pointer]->id,
         'nama_barang' => $seragams[$pointer]->nama_barang,
         'jenjang' => $seragams[$pointer]->jenjang,
+        'jenis_kelamin' => $seragams[$pointer]->jenis_kelamin,
         'ukuran' => $seragams[$pointer]->ukuran,
         'stok' => $seragams[$pointer]->stok,
         'harga' => StringHelper::hargaIntToRupiah($seragams[$pointer]->harga),
@@ -171,6 +172,7 @@ class GudangController extends Controller
             'id' => $seragam->id,
             'nama_barang' => $seragam->nama_barang,
             'jenjang' => $seragam->jenjang,
+            'jenis_kelamin' => $seragam->jenis_kelamin,
             'ukuran' => $seragam->ukuran,
             'stok' => $seragam->stok,
             'harga' => StringHelper::hargaIntToRupiah($seragam->harga),
@@ -189,6 +191,7 @@ class GudangController extends Controller
 
   public function inputBikinSeragam(Request $request)
   {
+    dd($request->all());
     // TODO: Validasi data
     $validatedData = $request->validate([
       'jenjang.*' => 'required|in:sd,smp,sma,smk',
