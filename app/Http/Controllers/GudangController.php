@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Helper\StringHelper;
 use App\Models\Seragam;
 use Carbon\Carbon;
+use Error;
 use Exception;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Http\Request;
@@ -190,8 +191,8 @@ class GudangController extends Controller
   {
     // TODO: Validasi data
     $validatedData = $request->validate([
-      'jenjang' => 'required|in:sd,smp,sma,smk',
-      'jenis_kelamin' => 'required|in:cowo,cewe',
+      'jenjang.*' => 'required|in:sd,smp,sma,smk',
+      'jenis_kelamin.*' => 'required|in:cowo,cewe',
       'nama_barang' => 'required',
       'ukuran' => 'required',
       'stok' => 'required|numeric|min:0',
@@ -200,6 +201,24 @@ class GudangController extends Controller
 
     try {
       // TODO: Create logic
+      $validatedData['jenjang'] = implode(',', $validatedData['jenjang']);
+      $validatedData['jenis_kelamin'] = implode(',', $validatedData['jenis_kelamin']);
+
+      // NOTE: avoid duplicate data on create
+      $seragam = Seragam::where('nama_barang', $validatedData['nama_barang'])->first();
+
+      if ($seragam) {
+        $isSameJenjang = $seragam->jenjang && $validatedData['jenjang'];
+        $isSameJenisKelamin = $seragam->jenis_kelamin && $validatedData['jenis_kelamin'];
+        $isSameUkuran = $seragam->ukuran && $validatedData['ukuran'];
+
+        $isDuplicateData = $isSameJenjang && $isSameJenisKelamin && $isSameUkuran;
+
+        if ($isDuplicateData) {
+          throw new Exception('Gk bisa bikin data yang sama, Maksud kamu edit kah?');
+        }
+      }
+
       Seragam::create([
         'nama_barang' => $validatedData['nama_barang'],
         'jenjang' => $validatedData['jenjang'],
@@ -209,17 +228,18 @@ class GudangController extends Controller
         'harga' => $validatedData['harga']
       ]);
 
+      // return "Berhasil membuat seragam!";
       return back()->with('create-success', "Berhasil membuat seragam!");
     } catch (Exception $e) {
+      // return $e->getMessage();
       return back()->with('create-error', $e->getMessage());
     }
   }
   public function updateSeragam(Request $request, $id)
   {
-
     $validatedData = $request->validate([
-      'jenjang' => 'required|in:sd,smp,sma,smk',
-      'jenis_kelamin' => 'required|in:cowo,cewe',
+      'jenjang.*' => 'required|in:sd,smp,sma,smk',
+      'jenis_kelamin.*' => 'required|in:cowo,cewe',
       'nama_barang' => 'required',
       'ukuran' => 'required',
       'stok' => 'required|numeric|min:0',
@@ -227,7 +247,11 @@ class GudangController extends Controller
     ]);
 
     try {
+      $validatedData['jenjang'] = implode(',', $validatedData['jenjang']);
+      $validatedData['jenis_kelamin'] = implode(',', $validatedData['jenis_kelamin']);
+
       Seragam::where('id', $id)->update($validatedData);
+
       return back()->with('update-success', 'berhasil update');
     } catch (Exception $e) {
       return back()->with('update-error', 'gagal update');
