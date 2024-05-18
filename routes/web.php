@@ -56,9 +56,6 @@ Route::controller(UkurController::class)->middleware('auth')->prefix('ukur')->gr
   Route::get('/order', 'daftarOrder')->can('read-ukur');
   Route::get('/{nomor_urut}', 'lihatOrderanMasuk')->can('read-ukur');
   Route::post('/bikin', 'inputBikinOrder')->can('create-ukur');
-<<<<<<< HEAD
-=======
   Route::patch('/update/{id}', 'updateOrder')->can('update-ukur');
   Route::delete('/delete/{id}', 'deleteOrder')->can('delete-ukur');
->>>>>>> ff8d5ac8432f43cdb7da5b6c35af62d681b2f182
 });
