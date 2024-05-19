@@ -64,10 +64,12 @@ class UkurController extends Controller
       }
 
       DB::commit();
+
       // return "Berhasil bikin order";
       return back()->with('create-success', 'Berhasil bikin order');
     } catch (Exception $e) {
       DB::rollBack();
+
       // return "Gagal bikin order:" . $e->getMessage();
       return back()->with('create-error', 'Gagal bikin order ' . $e->getMessage());
     }
@@ -106,12 +108,31 @@ class UkurController extends Controller
 
       $order->save();
 
+      $seragamIdOfStatus = Status::where('order_id', $id)->get()->pluck('seragam_id');
+
+      $deletedSeragamId = $seragamIdOfStatus->diff($validatedData['seragam_id']);
+
+      DB::table('statuses')
+        ->where('order_id', $id)
+        ->whereIn('seragam_id', $deletedSeragamId)
+        ->delete();
+
       foreach ($validatedData['seragam_id'] as $index => $seragamId) {
-        // TODO: klo seragam nya berkurang gimana?
-        Status::where('order_id', $id)->update([
-          'seragam_id' => $seragamId,
-          'kuantitas' => $validatedData['qty'][$index]
-        ]);
+        $status = DB::table('statuses')
+          ->where('order_id', $id)
+          ->where('seragam_id', $seragamId);
+
+        if ($status->exists()) {
+          $status->update([
+            'kuantitas' => $validatedData['qty'][$index]
+          ]);
+        } else {
+          Status::create([
+            'order_id' => $id,
+            'seragam_id' => $seragamId,
+            'kuantitas' => $validatedData['qty'][$index]
+          ]);
+        }
       }
 
       DB::commit();
@@ -120,7 +141,7 @@ class UkurController extends Controller
       return back()->with('update-success', 'Berhasil update order');
     } catch (Exception $e) {
       DB::rollBack();
-      // return 'Gagal update order';
+      // return 'Gagal update order ' . $e->getMessage();
       return back()->with('update-error', 'Gagal update order');
     }
   }
