@@ -106,22 +106,31 @@ class UkurController extends Controller
 
       $order->save();
 
+  
+
+      $orderID = Status::where('order_id', $id)->get()->pluck('seragam_id');
+      $compare = $orderID->diff($validatedData['seragam_id']);
+
+      Status::where('order_id', $id)->whereIn('seragam_id', $compare)->delete();
+      
       foreach ($validatedData['seragam_id'] as $index => $seragamId) {
-        // TODO: klo seragam nya berkurang gimana?
-        Status::where('order_id', $id)->update([
+       
+        Status::where('order_id', $id)->updateOrCreate([
           'seragam_id' => $seragamId,
-          'kuantitas' => $validatedData['qty'][$index]
-        ]);
+          'order_id' => $id],
+          ['kuantitas' => $validatedData['qty'][$index]]
+          
+        );
       }
 
       DB::commit();
 
-      // return 'Berhasil update order';
-      return back()->with('update-success', 'Berhasil update order');
+      return 'Berhasil update order';
+      // return back()->with('update-success', 'Berhasil update order');
     } catch (Exception $e) {
       DB::rollBack();
-      // return 'Gagal update order';
-      return back()->with('update-error', 'Gagal update order');
+      return 'Gagal update order'.$e->getMessage();
+      // return back()->with('update-error', 'Gagal update order');
     }
   }
 
