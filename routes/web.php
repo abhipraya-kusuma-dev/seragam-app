@@ -50,6 +50,7 @@ Route::controller(GudangController::class)->middleware('auth')->prefix('gudang')
 });
 
 Route::controller(UkurController::class)->middleware('auth')->prefix('ukur')->group(function () {
+  Route::get('/buat-order', 'buatOrder')->can('read-ukur');
   Route::get('/order', 'daftarOrder')->can('read-ukur');
   Route::get('/{nomor_urut}', 'lihatOrderanMasuk')->can('read-ukur');
   Route::post('/bikin', 'inputBikinOrder')->can('create-ukur');

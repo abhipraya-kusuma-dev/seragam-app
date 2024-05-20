@@ -26,7 +26,7 @@ class UserController extends Controller
       }
 
       if (Gate::allows('read-ukur')) {
-        return redirect()->intended('/ukur');
+        return redirect()->intended('/ukur/order');
       }
     } else {
       return back()->withErrors(['password' => 'invalidCredentials']);

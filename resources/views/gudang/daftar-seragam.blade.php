@@ -99,7 +99,7 @@
                     <div class="flex gap-4">
                         <div>
                             <label for="harga" class="font-bold">Harga</label><br>
-                            <input id="harga" name="harga" class="outline-none border rounded border-black mb-3 px-2 w-24"
+                            <input id="harga" name="harga" class="outline-none border rounded border-black mb-3 px-2 w-57"
                                 type="number" />
                         </div>
                     </div>

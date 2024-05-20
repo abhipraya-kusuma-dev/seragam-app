@@ -16,6 +16,10 @@ class UkurController extends Controller
       'orders' => []
     ]);
   }
+  public function buatOrder()
+  {
+    return view('ukur.buat-order');
+  }
 
   public function lihatOrderanMasuk($nomor_urut)
   {
