@@ -188,7 +188,6 @@ class GudangController extends Controller
 
   public function inputBikinSeragam(Request $request)
   {
-    dd($request->all());
     // TODO: Validasi data
     $validatedData = $request->validate([
       'jenjang.*' => 'required|in:sd,smp,sma,smk',

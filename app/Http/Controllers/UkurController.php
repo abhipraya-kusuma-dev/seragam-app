@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helper\StringHelper;
 use App\Models\Order;
 use Exception;
 use Illuminate\Http\Request;
@@ -12,6 +13,71 @@ use Illuminate\Support\Facades\DB;
 
 class UkurController extends Controller
 {
+  public function cariSeragam(Request $request)
+  {
+    $search = $request->query('search');
+
+    $seragams = DB::table('seragams')
+      ->whereRaw('LOWER(nama_barang) LIKE ?', ["%$search%"])
+      ->select('id', 'nama_barang', 'jenjang', 'jenis_kelamin', 'ukuran', 'stok', 'harga')
+      ->get();
+
+    $data = [];
+    $pointer = 0;
+
+    while ($seragams->count() > $pointer) {
+      $isExists = false;
+
+      // Check duplicate entries for $seragams[$pointer]->nama_barang on $data array
+      foreach ($data as $d) {
+        if ($d['nama_barang'] === $seragams[$pointer]->nama_barang) {
+          $isExists = true;
+
+          break;
+        }
+      }
+
+      // Skip the loop so $data array wouldn't have a new $seragam
+      if ($isExists) {
+        $pointer += 1;
+
+        continue;
+      };
+
+      // If $seragams[$pointer]->nama_barang is completely new and didn't exists in $data array, then
+      $data[] = [
+        'id' => $seragams[$pointer]->id,
+        'nama_barang' => $seragams[$pointer]->nama_barang,
+        'jenjang' => $seragams[$pointer]->jenjang,
+        'jenis_kelamin' => $seragams[$pointer]->jenis_kelamin,
+        'ukuran' => $seragams[$pointer]->ukuran,
+        'stok' => $seragams[$pointer]->stok,
+        'harga' => StringHelper::hargaIntToRupiah($seragams[$pointer]->harga),
+        'semua_ukuran' => [],
+      ];
+
+      foreach ($seragams as $seragam) {
+        if ($seragams[$pointer]->nama_barang === $seragam->nama_barang && $seragams[$pointer]->id !== $seragam->id) {
+          $data[$pointer]['semua_ukuran'][] = [
+            'id' => $seragam->id,
+            'nama_barang' => $seragam->nama_barang,
+            'jenjang' => $seragam->jenjang,
+            'jenis_kelamin' => $seragam->jenis_kelamin,
+            'ukuran' => $seragam->ukuran,
+            'stok' => $seragam->stok,
+            'harga' => StringHelper::hargaIntToRupiah($seragam->harga),
+          ];
+        }
+      }
+
+      $pointer += 1;
+    }
+
+    return response()->json([
+      'orders' => $data
+    ], 200);
+  }
+
   public function daftarOrder(Request $request)
   {
     $search = $request->query('search');

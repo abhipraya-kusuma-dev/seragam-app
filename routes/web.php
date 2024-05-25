@@ -23,7 +23,7 @@ Route::get('/redirect', function () {
   }
 
   if (Gate::allows('read-ukur')) {
-    return redirect('/ukur');
+    return redirect('/ukur/order');
   }
 })->middleware('auth');
 
