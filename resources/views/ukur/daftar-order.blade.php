@@ -4,7 +4,7 @@
     <x-navbar />
     <div class="current-page-bar-container px-[46px] mx-auto flex flex-col">
         <div class="current-page-bar flex gap-[13px] items-start">
-            <a class=" py-2 px-4 bg-[#6C0345]/80 text-white/60 font-semibold rounded-b-lg border-black border hover:text-white hover:bg-[#6C0345] transition duration-500" href="/ukur/buat-order">Buat Orderan
+            <a class=" py-2 px-4 bg-[#6C0345]/80 text-white/60 font-semibold rounded-b-lg border-black border hover:text-white hover:bg-[#6C0345] transition duration-500" href="/ukur/bikin">Buat Orderan
                 </a>
             <a class=" py-4 px-8  bg-[#6675F7] text-white font-semibold rounded-b-lg border-black border" href="">List
                 Order</a>
@@ -46,7 +46,7 @@
                         @if( request()->query('status') === 'selesai')
                         <td class="px-2 text-left bg-[#FF7878]">Order Keluar</td>
                         @endif
-                        <td class="px-2 text-left bg-[#78BEFF]"><a href="/gudang/order/{{ $order->nomor_urut }}" class="text-white hover:underline">Lihat Order</a></td>
+                        <td class="px-2 text-left bg-[#78BEFF]"><a href="/ukur/{{ $order->nomor_urut }}" class="text-white hover:underline">Lihat Order</a></td>
                     </tr>
                 @endforeach
             </tbody>
