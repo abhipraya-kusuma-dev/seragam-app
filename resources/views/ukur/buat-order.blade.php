@@ -3,7 +3,7 @@
 @section('content')
     <x-navbar />
     <div class="flex justify-center">
-        <div id="popupContainer" class="hidden fixed inset-0 w-full h-full flex justify-center items-center pointer-events-none transition-opacity duration-700">
+        <div id="popupContainer" class="hidden fixed inset-0 w-full h-full flex justify-center items-center pointer-events-none duration-700">
             <div id="popupBackground" class="fixed inset-0 bg-black opacity-0 transition-opacity duration-700"></div>
             <div id="popupContentContainer" class="relative bg-white rounded-2xl h-[525px] w-[1050px] flex flex-col justify-between transform translate-x-[100vw] transition-transform duration-700" style="box-shadow: 4px 8px 10px 0px rgb(15, 15, 15, 0.5)">
                 
@@ -56,7 +56,7 @@
                             class="has-[:checked]:border-2 has-[:checked]:border-[#FF5656] has-[:checked]:bg-white has-[:checked]:text-[#FF5656] border-2 border-transparent select-none text-center rounded-[8px] py-1 px-8 bg-[#FF5656] text-white font-semibold"
                             style="box-shadow: 2px 4px 5px rgb(177, 177, 177)">
                             SD
-                            <input tabindex="1" type="checkbox" name="jenjang[]" id="sd" value="sd"
+                            <input tabindex="1" type="radio" name="jenjang[]" id="sd" value="sd"
                                 class="hidden" />
                         </label>
 
@@ -64,21 +64,21 @@
                             class="has-[:checked]:border-2 has-[:checked]:border-[#3485FF] has-[:checked]:bg-white has-[:checked]:text-[#3485FF] border-2 border-transparent select-none text-center rounded-[8px] py-1 px-7 bg-[#3485FF] text-white font-semibold"
                             style="box-shadow: 2px 4px 5px rgb(177, 177, 177)">
                             SMP
-                            <input type="checkbox" name="jenjang[]" id="smp" value="smp" class="hidden" />
+                            <input type="radio" name="jenjang[]" id="smp" value="smp" class="hidden" />
                         </label>
 
                         <label for="sma"
                             class="has-[:checked]:border-2 has-[:checked]:border-[#2BCB4E] has-[:checked]:bg-white has-[:checked]:text-[#2BCB4E] border-2 border-transparent select-none text-center rounded-[8px] py-1 px-7 bg-[#2BCB4E] text-white font-semibold"
                             style="box-shadow: 2px 4px 5px rgb(177, 177, 177)">
                             SMA
-                            <input type="checkbox" name="jenjang[]" id="sma" value="sma" class="hidden" />
+                            <input type="radio" name="jenjang[]" id="sma" value="sma" class="hidden" />
                         </label>
 
                         <label for="smk"
                             class="has-[:checked]:border-2 has-[:checked]:border-[#DC6B19] has-[:checked]:bg-white has-[:checked]:text-[#DC6B19] border-2 border-transparent select-none text-center rounded-[8px] py-1 px-7 bg-[#DC6B19] text-white font-semibold"
                             style="box-shadow: 2px 4px 5px rgb(177, 177, 177)">
                             SMK
-                            <input type="checkbox" name="jenjang[]" id="smk" value="smk" class="hidden" />
+                            <input type="radio" name="jenjang[]" id="smk" value="smk" class="hidden" />
                         </label>
                     </div>
 
@@ -88,14 +88,14 @@
                             class="has-[:checked]:border-2 has-[:checked]:border-[#3485FF] has-[:checked]:bg-white has-[:checked]:text-[#3485FF] border-2 border-transparent select-none rounded-[8px] py-1 px-7 bg-[#3485FF] text-white font-semibold"
                             style="box-shadow: 2px 4px 5px rgb(177, 177, 177)">
                             Pria
-                            <input type="checkbox" name="jenis_kelamin[]" id="cowo" value="cowo" class="hidden" />
+                            <input type="radio" name="jenis_kelamin[]" id="cowo" value="cowo" class="hidden" />
                         </label>
 
                         <label for="cewe"
                             class="has-[:checked]:border-2 has-[:checked]:border-[#FF34C6] has-[:checked]:bg-white has-[:checked]:text-[#FF34C6] border-2 border-2 border-transparent select-none rounded-[8px] py-1 px-5 bg-[#FF34C6] text-white font-semibold"
                             style="box-shadow: 2px 4px 5px rgb(177, 177, 177)">
                             Wanita
-                            <input type="checkbox" name="jenis_kelamin[]" id="cewe" value="cewe" class="hidden" />
+                            <input type="radio" name="jenis_kelamin[]" id="cewe" value="cewe" class="hidden" />
                         </label>
                     </div>
                     <div>
@@ -194,6 +194,6 @@
             // Hide the container after the transitions are complete
             setTimeout(function(){
                 popupContainer.classList.add("opacity-0", "pointer-events-none");
-            }, 200); // Match this duration to the transition duration
+            }, 300); // Match this duration to the transition duration
         });
     </script>

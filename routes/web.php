@@ -38,20 +38,27 @@ Route::controller(UserController::class)->group(function () {
   Route::post('/logout', 'logout')->middleware('auth');
 });
 
-Route::controller(GudangController::class)->middleware('auth')->prefix('gudang')->group(function () {
-  Route::get('/order', 'daftarOrder')->can('read-gudang');
-  Route::get('/order/{nomor_urut}', 'lihatOrderanMasuk')->can('read-gudang');
-  Route::put('/order/{nomor_urut}/update', 'updateOrderanMasuk')->can('update-gudang');
+Route::controller(GudangController::class)
+  ->middleware('auth')
+  ->prefix('gudang') // NOTE: Baca aku bro!
+  ->group(function () {
+    Route::get('/order', 'daftarOrder')->can('read-gudang');
+    Route::get('/order/{nomor_urut}', 'lihatOrderanMasuk')->can('read-gudang');
+    Route::put('/order/{nomor_urut}/update', 'updateOrderanMasuk')->can('update-gudang');
 
-  Route::get('/seragam/bikin', 'daftarSeragam')->can('create-gudang');
-  Route::post('/seragam/bikin', 'inputBikinSeragam')->can('create-gudang');
-  Route::patch('/seragam/update/{id}', 'updateSeragam')->can('update-gudang');
-  Route::delete('/seragam/delete/{id}', 'deleteSeragam')->can('delete-gudang');
-});
+    Route::get('/seragam/bikin', 'daftarSeragam')->can('create-gudang');
+    Route::post('/seragam/bikin', 'inputBikinSeragam')->can('create-gudang');
+    Route::patch('/seragam/update/{id}', 'updateSeragam')->can('update-gudang');
+    Route::delete('/seragam/delete/{id}', 'deleteSeragam')->can('delete-gudang');
+  });
 
-Route::controller(UkurController::class)->middleware('auth')->prefix('ukur')->group(function () {
-  Route::get('/buat-order', 'buatOrder')->can('read-ukur');
-  Route::get('/order', 'daftarOrder')->can('read-ukur');
-  Route::get('/{nomor_urut}', 'lihatOrderanMasuk')->can('read-ukur');
-  Route::post('/bikin', 'inputBikinOrder')->can('create-ukur');
-});
+Route::controller(UkurController::class)
+  ->middleware('auth')
+  ->prefix('ukur') // NOTE: Lihat aku bre
+  ->group(function () {
+    Route::get('/order', 'daftarOrder')->can('read-ukur');
+    Route::get('/{nomor_urut}', 'lihatOrderanMasuk')->can('read-ukur');
+    Route::post('/bikin', 'inputBikinOrder')->can('create-ukur');
+    Route::patch('/update/{id}', 'updateOrder')->can('update-ukur');
+    Route::delete('/delete/{id}', 'deleteOrder')->can('delete-ukur');
+  });
