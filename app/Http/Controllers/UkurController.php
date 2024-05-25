@@ -6,29 +6,70 @@ use App\Models\Order;
 use Exception;
 use Illuminate\Http\Request;
 use App\Models\Status;
+use Carbon\Carbon;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\DB;
 
 class UkurController extends Controller
 {
-  public function daftarOrder()
+  public function daftarOrder(Request $request)
   {
+    $search = $request->query('search');
+    $status = $request->query('status', 'on-process');
+
+    $orders = DB::table('orders')
+      ->when($search, function (Builder $builder) use ($search) {
+        $search = strtolower($search);
+
+        return $builder
+          ->whereRaw('LOWER(nomor_urut) like ?', ["%$search%"])
+          ->orWhereRaw('LOWER(nama_lengkap) like ?', ["%$search%"]);
+      })
+      ->where('status', $status)
+      ->select('nomor_urut', 'jenjang', 'nama_lengkap', 'created_at as order_masuk')
+      ->get();
+
+    foreach ($orders as $order) {
+      $order->order_masuk = Carbon::parse($order->order_masuk)
+        ->timezone('Asia/Jakarta')
+        ->format('d/m/y | h:m');
+    }
+
     return view('ukur.daftar-order', [
-      'orders' => []
+      'orders' => $orders
     ]);
   }
 
   public function lihatOrderanMasuk($nomor_urut)
   {
+    $order = DB::table('orders')
+      ->where('nomor_urut', $nomor_urut)
+      ->select('id', 'jenjang', 'nomor_urut', 'nama_lengkap')
+      ->first();
+
+    $semua_seragam = DB::table('statuses')
+      ->join('seragams', 'seragams.id', 'statuses.seragam_id')
+      ->where('statuses.order_id', $order->id)
+      ->select('seragams.id', 'seragams.nama_barang', 'seragams.ukuran', 'statuses.kuantitas')
+      ->get();
+
+    $order->semua_seragam = $semua_seragam;
+
     return view('ukur.order-detail', [
       'nomor_urut' => $nomor_urut,
-      'order' => []
+      'order' => $order
     ]);
   }
 
   public function bikinOrder()
   {
+    $lastOrder = Order::latest()->first();
+    $lastOrderNum = (int) substr($lastOrder->nomor_urut, 1);
+
+    $latestOrderNum = str_pad($lastOrderNum + 1, 4, '0', STR_PAD_LEFT);
+
     return view('ukur.bikin-order', [
-      'nomor-order-terakhir' => 00001
+      'nomor-order-terakhir' => $latestOrderNum
     ]);
   }
 

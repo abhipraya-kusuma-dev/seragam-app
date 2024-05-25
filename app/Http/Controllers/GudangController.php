@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Helper\StringHelper;
 use App\Models\Seragam;
 use Carbon\Carbon;
-use Error;
 use Exception;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Http\Request;
@@ -42,8 +41,6 @@ class GudangController extends Controller
           ->format('d/m/y | h:m');
       }
     }
-
-
 
     return view('gudang.daftar-order', [
       'orders' => $orders
