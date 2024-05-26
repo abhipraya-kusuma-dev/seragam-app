@@ -99,7 +99,7 @@
                     <div class="flex gap-4">
                         <div>
                             <label for="harga" class="font-bold">Harga</label><br>
-                            <input id="harga" name="harga" class="outline-none border rounded border-black mb-3 px-2 w-24"
+                            <input id="harga" name="harga" class="outline-none border rounded border-black mb-3 px-2 w-57"
                                 type="number" />
                         </div>
                     </div>
@@ -180,7 +180,7 @@
                                                 <h1>/</h1>
                                             </div>
                                             <div>
-                                                <form action="/gudang/seragam/hapus/{{ $ukuran['id'] }}" method="post">
+                                                <form action="/gudang/seragam/delete/{{ $ukuran['id'] }}" method="post">
                                                     @csrf
                                                     @method('DELETE')
                                                     <button class="text-red-500 hover:underline"
@@ -240,7 +240,8 @@
                 document.querySelector("select[name='ukuran']").value = getVal(`#ukuran-${seragamId}`)
                     .trim()
                 document.querySelector("input[name='stok']").value = getVal(`#stok-${seragamId}`).trim()
-                document.querySelector("input[name='harga']").value = getVal(`#harga-${seragamId}`).trim()
+                const hargaVal = getVal(`#harga-${seragamId}`).slice(3).split('.').join('');
+                document.querySelector("input[name='harga']").value = parseInt(hargaVal)
                 
 
                 sd.checked = false

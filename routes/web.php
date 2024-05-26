@@ -57,6 +57,7 @@ Route::controller(UkurController::class)
   ->prefix('ukur') // NOTE: Lihat aku bre
   ->group(function () {
     Route::get('/order', 'daftarOrder')->can('read-ukur');
+    Route::get('/bikin', 'bikinOrder')->can('create-ukur');
     Route::get('/{nomor_urut}', 'lihatOrderanMasuk')->can('read-ukur');
     Route::post('/bikin', 'inputBikinOrder')->can('create-ukur');
     Route::patch('/update/{id}', 'updateOrder')->can('update-ukur');
