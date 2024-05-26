@@ -69,4 +69,5 @@ Route::controller(LaporanController::class)
 ->prefix('laporan')
 ->group(function() {
   Route::get('/lihat', 'lihatOrderan');
+  Route::get('/export', 'export');
 });

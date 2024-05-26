@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\LaporanExport;
 use Illuminate\Http\Request;
 use App\Helper\StringHelper;
 use App\Models\Order;
@@ -10,20 +11,21 @@ use App\Models\Status;
 use Carbon\Carbon;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
 
 class LaporanController extends Controller
 {
     public function lihatOrderan(Request $request){
 
-        $inputUser = $request->tanggal;
+        $tanggal = $request->tanggal;
         $jenjang = $request->jenjang;
         
 
         $orders = DB::table('seragams')
         ->join('statuses', 'seragams.id','=','statuses.seragam_id')
         ->join('orders', 'orders.id', '=', 'statuses.order_id')
-        ->when($inputUser, function(Builder $builder) use($inputUser){
-            return $builder->whereDate('orders.created_at','=',Carbon::parse($inputUser));
+        ->when($tanggal, function(Builder $builder) use($tanggal){
+            return $builder->whereDate('orders.created_at','=',Carbon::parse($tanggal));
         })
         ->when($jenjang, function(Builder $builder) use($jenjang){
             return $builder->where('seragams.jenjang','LIKE', "%$jenjang%");
@@ -34,22 +36,28 @@ class LaporanController extends Controller
 
         
 
-        foreach($orders as $d){
+        foreach($orders as $order){
             $status = DB::table('statuses')
             ->select('seragam_id','kuantitas')
             ->get();
             foreach($status as $e){
-            if($d->id == $e->seragam_id){
-                $d->total_penjualan = $d->total_penjualan ?? 0;
-                $d->total_penjualan = $d->total_penjualan + ($d->harga * $e->kuantitas);
+            if($order->id == $e->seragam_id){
+                $order->total_penjualan = $order->total_penjualan ?? 0;
+                $order->total_penjualan = $order->total_penjualan + ($order->harga * $e->kuantitas);
             }
         }
         
     }
-
-        dd($orders->unique('nama_barang'));
-
+        
+        dd($orders->forget('id')->unique('nama_barang')->values());
         
     }
-  
+    public function export(Request $request){
+        $tanggal = $request->tanggal;
+        $jenjang = $request->jenjang;
+
+        return Excel::download(new LaporanExport($jenjang, $tanggal), 'Laporan Order'.$tanggal.'.xlsx');
+    }
+    
 }
+
