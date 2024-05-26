@@ -149,7 +149,7 @@
                                         <h1>/</h1>
                                     </div>
                                     <div>
-                                        <form action="/gudang/seragam/hapus/{{ $seragam['id'] }}" method="post">
+                                        <form action="/gudang/seragam/delete/{{ $seragam['id'] }}" method="post">
                                             @csrf
                                             @method('DELETE')
                                             <button class="text-red-500 hover:underline" type="submit">Hapus</button>
