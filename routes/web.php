@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\GudangController;
+use App\Http\Controllers\LaporanController;
 use App\Http\Controllers\UkurController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Gate;
@@ -63,3 +64,9 @@ Route::controller(UkurController::class)
     Route::patch('/update/{id}', 'updateOrder')->can('update-ukur');
     Route::delete('/delete/{id}', 'deleteOrder')->can('delete-ukur');
   });
+Route::controller(LaporanController::class)
+->middleware('auth')
+->prefix('laporan')
+->group(function() {
+  Route::get('/lihat', 'lihatOrderan');
+});
