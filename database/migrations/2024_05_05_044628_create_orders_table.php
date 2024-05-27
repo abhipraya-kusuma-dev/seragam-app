@@ -18,7 +18,7 @@ return new class extends Migration
       $table->string('nama_lengkap');
       $table->string('jenis_kelamin');
       $table->dateTime('complete_timestamp')->nullable();
-      $table->string('status')->default('on-process'); // Enum: on-process, draft, complete
+      $table->string('status')->default('on-process'); // Enum: on-process, draft, selesai
       $table->timestamps();
     });
   }

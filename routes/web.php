@@ -60,14 +60,17 @@ Route::controller(UkurController::class)
     Route::get('/order', 'daftarOrder')->can('read-ukur');
     Route::get('/bikin', 'bikinOrder')->can('create-ukur');
     Route::get('/{nomor_urut}', 'lihatOrderanMasuk')->can('read-ukur');
+    Route::get('/{nomor_urut}/edit', 'editOrder')->can('update-ukur');
     Route::post('/bikin', 'inputBikinOrder')->can('create-ukur');
     Route::patch('/update/{id}', 'updateOrder')->can('update-ukur');
     Route::delete('/delete/{id}', 'deleteOrder')->can('delete-ukur');
   });
+
 Route::controller(LaporanController::class)
-->middleware('auth')
-->prefix('laporan')
-->group(function() {
-  Route::get('/lihat', 'lihatOrderan');
-  Route::get('/export', 'export');
-});
+  ->middleware('auth')
+  ->prefix('laporan')
+  ->group(function () {
+    Route::get('/lihat', 'lihatOrderan');
+    Route::get('/export', 'export');
+  });
+

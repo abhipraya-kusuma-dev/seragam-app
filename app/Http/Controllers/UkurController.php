@@ -8,6 +8,7 @@ use Exception;
 use Illuminate\Http\Request;
 use App\Models\Status;
 use Carbon\Carbon;
+use Error;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\DB;
 
@@ -92,12 +93,12 @@ class UkurController extends Controller
           ->orWhereRaw('LOWER(nama_lengkap) like ?', ["%$search%"]);
       })
       ->where('status', $status)
-      ->select('nomor_urut', 'jenjang', 'nama_lengkap', 'created_at as order_masuk')
+      ->select('id', 'nomor_urut', 'jenjang', 'nama_lengkap', 'created_at as order_masuk')
       ->get();
 
     foreach ($orders as $order) {
       $order->order_masuk = Carbon::parse($order->order_masuk)
-        ->timezone('Asia/Jakarta')
+        ->setTimezone('Asia/Jakarta')
         ->format('d/m/y | h:m');
     }
 
@@ -105,7 +106,7 @@ class UkurController extends Controller
       'orders' => $orders
     ]);
   }
-  
+
 
   public function lihatOrderanMasuk($nomor_urut)
   {
@@ -130,13 +131,15 @@ class UkurController extends Controller
 
   public function bikinOrder()
   {
-    $lastOrder = Order::latest()->first();
+    $lastOrder = Order::orderBy('nomor_urut', 'desc')->first();
     $lastOrderNum = (int) substr($lastOrder->nomor_urut, 1);
 
-    $latestOrderNum = str_pad($lastOrderNum + 1, 4, '0', STR_PAD_LEFT);
+    $lastOrderNum += 1;
+
+    $latestOrderNum = str_pad($lastOrderNum, 4, '0', STR_PAD_LEFT);
 
     return view('ukur.bikin-order', [
-      'nomor-order-terakhir' => $latestOrderNum
+      'nomorOrderTerakhir' => $latestOrderNum
     ]);
   }
 
@@ -156,12 +159,31 @@ class UkurController extends Controller
       // TODO: logic bikin order baru
       DB::beginTransaction();
 
-      $order = Order::create([
-        'jenjang' => $validatedData['jenjang'],
-        'nomor_urut' => $validatedData['nomor_urut'],
-        'nama_lengkap' => $validatedData['nama_lengkap'],
-        'jenis_kelamin' => $validatedData['jenis_kelamin'],
-      ]);
+      switch ($request->input('action')) {
+        case 'complete':
+          $order = Order::create([
+            'jenjang' => $validatedData['jenjang'],
+            'nomor_urut' => $validatedData['nomor_urut'],
+            'nama_lengkap' => $validatedData['nama_lengkap'],
+            'jenis_kelamin' => $validatedData['jenis_kelamin'],
+            'status' => 'on-process',
+          ]);
+
+          break;
+        case 'draft':
+          $order = Order::create([
+            'jenjang' => $validatedData['jenjang'],
+            'nomor_urut' => $validatedData['nomor_urut'],
+            'nama_lengkap' => $validatedData['nama_lengkap'],
+            'jenis_kelamin' => $validatedData['jenis_kelamin'],
+            'status' => 'draft',
+          ]);
+
+          break;
+        default:
+          throw new Error('Action nya salah');
+          break;
+      }
 
       foreach ($validatedData['seragam_id'] as $index => $id) {
         Status::create([
@@ -178,15 +200,37 @@ class UkurController extends Controller
     } catch (Exception $e) {
       DB::rollBack();
 
-      // return "Gagal bikin order:" . $e->getMessage();
-      return back()->with('create-error', 'Gagal bikin order ' . $e->getMessage());
+      return "Gagal bikin order:" . $e->getMessage();
+      // return back()->with('create-error', 'Gagal bikin order ' . $e->getMessage());
     }
   }
 
   public function editOrder($nomor_urut)
   {
+    $order = DB::table('orders')
+      ->where('nomor_urut', $nomor_urut)
+      ->select('id', 'jenjang', 'nomor_urut', 'nama_lengkap', 'jenis_kelamin')
+      ->first();
+
+    $semua_seragam = DB::table('statuses')
+      ->join('seragams', 'seragams.id', 'statuses.seragam_id')
+      ->where('statuses.order_id', $order->id)
+      ->select('seragams.id', 'seragams.nama_barang', 'seragams.ukuran', 'seragams.harga', 'statuses.kuantitas as QTY')
+      ->get();
+
+    foreach ($semua_seragam as $seragam) {
+      $seragam->harga = StringHelper::hargaIntToRupiah($seragam->harga);
+    }
+
+    $order->semua_seragam = $semua_seragam;
+
+    $lastOrderNum = (int) substr($nomor_urut, 1);
+
+    $latestOrderNum = str_pad($lastOrderNum, 4, '0', STR_PAD_LEFT);
+
     return view('ukur.edit-order', [
-      'order' => []
+      'order' => $order,
+      'nomorOrderTerakhir' => $latestOrderNum
     ]);
   }
 
@@ -235,8 +279,8 @@ class UkurController extends Controller
 
       DB::commit();
 
-      return 'Berhasil update order';
-      // return back()->with('update-success', 'Berhasil update order');
+      // return 'Berhasil update order';
+      return back()->with('update-success', 'Berhasil update order');
     } catch (Exception $e) {
       DB::rollBack();
       return 'Gagal update order' . $e->getMessage();

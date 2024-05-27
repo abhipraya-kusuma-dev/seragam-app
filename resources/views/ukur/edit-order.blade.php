@@ -2,7 +2,7 @@
 
 @section('content')
     <script>
-        const orderItemList = []
+        const orderItemList = {{ Js::from($order->semua_seragam) }}
 
         const changeUkuran = (ukuranDanStok, index) => {
             const stokElement = document.getElementById('stok' + index);
@@ -262,11 +262,11 @@
     </div>
 
     <div class="px-[46px]">
-        @if (session('create-success'))
-            <p class="text-green-600">{{ session('create-success') }}</p>
+        @if (session('update-success'))
+            <p class="text-green-600">{{ session('update-success') }}</p>
         @endif
-        @if (session('create-error'))
-            <p class="text-red-600">{{ session('create-error') }}</p>
+        @if (session('update-error'))
+            <p class="text-red-600">{{ session('update-error') }}</p>
         @endif
 
         @if ($errors->any())
@@ -284,12 +284,14 @@
 
         <div class="flex flex-col gap-5">
             <div class="border rounded-xl border-black px-4 py-2" style="box-shadow: 2px 4px 6px rgb(177, 177, 177)">
-                <form id="create-and-edit-form" action="/ukur/bikin" class="flex flex-col gap-4" method="POST">
+                <form id="create-and-edit-form" action="/ukur/update/{{ $order->id }}" class="flex flex-col gap-4"
+                    method="POST">
+                    @method('PATCH')
                     @csrf
                     <div>
                         <h1 class="font-bold">Nomor Urut</h1>
                         <input class="font-semibold bg-transparent cursor-not-allowed pointer-events-none"
-                            id="order-nomor-urut" name="nomor_urut" value="{{ $nomorOrderTerakhir }}" />
+                            id="order-nomor-urut" name="nomor_urut" value="{{ $order->nomor_urut }}" />
                     </div>
                     <h1 class="font-bold">Jenjang</h1>
                     <div class="flex items-center gap-4">
@@ -298,28 +300,31 @@
                             style="box-shadow: 2px 4px 5px rgb(177, 177, 177)">
                             SD
                             <input tabindex="1" type="radio" name="jenjang" id="sd" value="sd"
-                                class="hidden" />
+                                {{ $order->jenjang === 'sd' ? 'checked' : '' }} class="hidden" />
                         </label>
 
                         <label for="smp"
                             class="has-[:checked]:border-2 has-[:checked]:border-[#3485FF] has-[:checked]:bg-white has-[:checked]:text-[#3485FF] border-2 border-transparent select-none text-center rounded-[8px] py-1 px-7 bg-[#3485FF] text-white font-semibold"
                             style="box-shadow: 2px 4px 5px rgb(177, 177, 177)">
                             SMP
-                            <input type="radio" name="jenjang" id="smp" value="smp" class="hidden" />
+                            <input type="radio" name="jenjang" id="smp" value="smp" class="hidden"
+                                {{ $order->jenjang === 'smp' ? 'checked' : '' }} />
                         </label>
 
                         <label for="sma"
                             class="has-[:checked]:border-2 has-[:checked]:border-[#2BCB4E] has-[:checked]:bg-white has-[:checked]:text-[#2BCB4E] border-2 border-transparent select-none text-center rounded-[8px] py-1 px-7 bg-[#2BCB4E] text-white font-semibold"
                             style="box-shadow: 2px 4px 5px rgb(177, 177, 177)">
                             SMA
-                            <input type="radio" name="jenjang" id="sma" value="sma" class="hidden" />
+                            <input type="radio" name="jenjang" id="sma" value="sma" class="hidden"
+                                {{ $order->jenjang === 'sma' ? 'checked' : '' }} />
                         </label>
 
                         <label for="smk"
                             class="has-[:checked]:border-2 has-[:checked]:border-[#DC6B19] has-[:checked]:bg-white has-[:checked]:text-[#DC6B19] border-2 border-transparent select-none text-center rounded-[8px] py-1 px-7 bg-[#DC6B19] text-white font-semibold"
                             style="box-shadow: 2px 4px 5px rgb(177, 177, 177)">
                             SMK
-                            <input type="radio" name="jenjang" id="smk" value="smk" class="hidden" />
+                            <input type="radio" name="jenjang" id="smk" value="smk" class="hidden"
+                                {{ $order->jenjang === 'smk' ? 'checked' : '' }} />
                         </label>
                     </div>
 
@@ -329,21 +334,23 @@
                             class="has-[:checked]:border-2 has-[:checked]:border-[#3485FF] has-[:checked]:bg-white has-[:checked]:text-[#3485FF] border-2 border-transparent select-none rounded-[8px] py-1 px-7 bg-[#3485FF] text-white font-semibold"
                             style="box-shadow: 2px 4px 5px rgb(177, 177, 177)">
                             Pria
-                            <input type="radio" name="jenis_kelamin" id="cowo" value="cowo" class="hidden" />
+                            <input type="radio" name="jenis_kelamin" id="cowo" value="cowo" class="hidden"
+                                {{ $order->jenis_kelamin === 'cowo' ? 'checked' : '' }} />
                         </label>
 
                         <label for="cewe"
                             class="has-[:checked]:border-2 has-[:checked]:border-[#FF34C6] has-[:checked]:bg-white has-[:checked]:text-[#FF34C6] border-2 border-2 border-transparent select-none rounded-[8px] py-1 px-5 bg-[#FF34C6] text-white font-semibold"
                             style="box-shadow: 2px 4px 5px rgb(177, 177, 177)">
                             Wanita
-                            <input type="radio" name="jenis_kelamin" id="cewe" value="cewe" class="hidden" />
+                            <input type="radio" name="jenis_kelamin" id="cewe" value="cewe" class="hidden"
+                                {{ $order->jenis_kelamin === 'cewe' ? 'checked' : '' }} />
                         </label>
                     </div>
                     <div>
                         <label for="nama_lengkap" class="font-bold">Nama Lengkap</label><br>
                         <input list="list_nama_barang" id="nama_lengkap" name="nama_lengkap"
                             class="outline-none border rounded border-black px-2 font-bold mt-2"
-                            placeholder="Tuliskan nama..." />
+                            placeholder="Tuliskan nama..." value="{{ $order->nama_lengkap }}" />
                     </div>
             </div>
             <div class="flex gap-5">
@@ -389,6 +396,9 @@
 
         generateNomorUrut();
 
+        console.log(orderItemList);
+        generateDataOnTable(orderItemList);
+
         document.getElementById("pilih-item").addEventListener("click", function() {
 
             const popupContainer = document.getElementById("popupContainer");
@@ -402,6 +412,8 @@
             popupContentContainer.classList.add("translate-x-0");
 
 
+            generateOrderItemList(orderItemList);
+            generateTotalPrice(orderItemList);
         });
 
         document.getElementById("close-popup").addEventListener("click", function() {
