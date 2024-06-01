@@ -9,6 +9,7 @@ use Exception;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class GudangController extends Controller
 {
@@ -43,7 +44,8 @@ class GudangController extends Controller
     }
 
     return view('gudang.daftar-order', [
-      'orders' => $orders
+      'orders' => $orders,
+      'title' => 'Gudang | Daftar Order'
     ]);
   }
 
@@ -64,7 +66,8 @@ class GudangController extends Controller
 
     return view('gudang.order-detail', [
       'nomor_urut' => $nomor_urut,
-      'order' => $order
+      'order' => $order,
+      'title' => 'Gudang | Order Detail'
     ]);
   }
 
@@ -151,21 +154,23 @@ class GudangController extends Controller
         continue;
       };
 
+      $new_seragam = $seragams[$pointer];
+
       // If $seragams[$pointer]->nama_barang is completely new and didn't exists in $data array, then
       $data[] = [
-        'id' => $seragams[$pointer]->id,
-        'nama_barang' => $seragams[$pointer]->nama_barang,
-        'jenjang' => $seragams[$pointer]->jenjang,
-        'jenis_kelamin' => $seragams[$pointer]->jenis_kelamin,
-        'ukuran' => $seragams[$pointer]->ukuran,
-        'stok' => $seragams[$pointer]->stok,
-        'harga' => StringHelper::hargaIntToRupiah($seragams[$pointer]->harga),
+        'id' => $new_seragam->id,
+        'nama_barang' => $new_seragam->nama_barang,
+        'jenjang' => $new_seragam->jenjang,
+        'jenis_kelamin' => $new_seragam->jenis_kelamin,
+        'ukuran' => $new_seragam->ukuran,
+        'stok' => $new_seragam->stok,
+        'harga' => StringHelper::hargaIntToRupiah($new_seragam->harga),
         'semua_ukuran' => [],
       ];
 
       foreach ($seragams as $seragam) {
-        if ($seragams[$pointer]->nama_barang === $seragam->nama_barang && $seragams[$pointer]->id !== $seragam->id) {
-          $data[$pointer]['semua_ukuran'][] = [
+        if ($new_seragam->nama_barang === $seragam->nama_barang && $new_seragam->id !== $seragam->id) {
+          $data[count($data) - 1]['semua_ukuran'][] = [
             'id' => $seragam->id,
             'nama_barang' => $seragam->nama_barang,
             'jenjang' => $seragam->jenjang,
@@ -182,7 +187,8 @@ class GudangController extends Controller
 
     return view('gudang.daftar-seragam', [
       'data' => $data,
-      'list_ukuran_fix' => $list_ukuran_fix
+      'list_ukuran_fix' => $list_ukuran_fix,
+      'title' => 'Gudang | Daftar Seragam'
     ]);
   }
 
@@ -207,9 +213,9 @@ class GudangController extends Controller
       $seragam = Seragam::where('nama_barang', $validatedData['nama_barang'])->first();
 
       if ($seragam) {
-        $isSameJenjang = $seragam->jenjang && $validatedData['jenjang'];
-        $isSameJenisKelamin = $seragam->jenis_kelamin && $validatedData['jenis_kelamin'];
-        $isSameUkuran = $seragam->ukuran && $validatedData['ukuran'];
+        $isSameJenjang = $seragam->jenjang === $validatedData['jenjang'];
+        $isSameJenisKelamin = $seragam->jenis_kelamin === $validatedData['jenis_kelamin'];
+        $isSameUkuran = $seragam->ukuran === $validatedData['ukuran'];
 
         $isDuplicateData = $isSameJenjang && $isSameJenisKelamin && $isSameUkuran;
 

@@ -14,6 +14,25 @@
     </div>
     <section class="flex justify-between py-10 px-[46px]">
         <div class="flex flex-col gap-5">
+
+            <div class="px-[46px]">
+                @if (session('create-success'))
+                    <p class="text-green-600">{{ session('create-success') }}</p>
+                @endif
+                @if (session('create-error'))
+                    <p class="text-red-600">{{ session('create-error') }}</p>
+                @endif
+
+                @if ($errors->any())
+                    <div class="bg-red-600 text-white">
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+            </div>
             <div class="border rounded-xl border-black px-4 py-2" style="box-shadow: 2px 4px 6px rgb(177, 177, 177)">
                 <form id="create-and-edit-form" action="/gudang/seragam/bikin" class="flex flex-col gap-4" method="POST">
                     <div id="method-field">
@@ -99,8 +118,8 @@
                     <div class="flex gap-4">
                         <div>
                             <label for="harga" class="font-bold">Harga</label><br>
-                            <input id="harga" name="harga" class="outline-none border rounded border-black mb-3 px-2 w-57"
-                                type="number" />
+                            <input id="harga" name="harga"
+                                class="outline-none border rounded border-black mb-3 px-2 w-57" type="number" />
                         </div>
                     </div>
 
@@ -242,7 +261,7 @@
                 document.querySelector("input[name='stok']").value = getVal(`#stok-${seragamId}`).trim()
                 const hargaVal = getVal(`#harga-${seragamId}`).slice(3).split('.').join('');
                 document.querySelector("input[name='harga']").value = parseInt(hargaVal)
-                
+
 
                 sd.checked = false
                 smp.checked = false

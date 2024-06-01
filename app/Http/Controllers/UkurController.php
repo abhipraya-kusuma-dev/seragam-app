@@ -75,7 +75,7 @@ class UkurController extends Controller
     }
 
     return response()->json([
-      'orders' => $data
+      'orders' => $data,
     ], 200);
   }
 
@@ -103,7 +103,8 @@ class UkurController extends Controller
     }
 
     return view('ukur.daftar-order', [
-      'orders' => $orders
+      'orders' => $orders,
+      'title' => 'Ukur | Daftar Order'
     ]);
   }
 
@@ -125,7 +126,8 @@ class UkurController extends Controller
 
     return view('ukur.order-detail', [
       'nomor_urut' => $nomor_urut,
-      'order' => $order
+      'order' => $order,
+      'title' => 'Ukur | Order Detail'
     ]);
   }
 
@@ -139,7 +141,8 @@ class UkurController extends Controller
     $latestOrderNum = str_pad($lastOrderNum, 4, '0', STR_PAD_LEFT);
 
     return view('ukur.bikin-order', [
-      'nomorOrderTerakhir' => $latestOrderNum
+      'nomorOrderTerakhir' => $latestOrderNum,
+      'title' => 'Ukur | Bikin Order'
     ]);
   }
 
@@ -230,7 +233,8 @@ class UkurController extends Controller
 
     return view('ukur.edit-order', [
       'order' => $order,
-      'nomorOrderTerakhir' => $latestOrderNum
+      'nomorOrderTerakhir' => $latestOrderNum,
+      'title' => 'Ukur | Edit Order'
     ]);
   }
 
