@@ -166,10 +166,10 @@
         }
 
         const generateInput = (list) => {
-            const formContainer = document.getElementById('create-and-edit-form');
+            const inputSeragamIdContainer = document.getElementById('input-seragam-id');
 
             list.forEach(order => {
-                formContainer.innerHTML += `
+                inputSeragamIdContainer.innerHTML += `
                   <input type="hidden" value="${order.id}" name="seragam_id[]" />
                   <input type="hidden" value="${order.QTY}" name="qty[]" />
                 `
@@ -288,6 +288,7 @@
                     method="POST">
                     @method('PATCH')
                     @csrf
+                    <div id="input-seragam-id"></div>
                     <div>
                         <h1 class="font-bold">Nomor Urut</h1>
                         <input class="font-semibold bg-transparent cursor-not-allowed pointer-events-none"
@@ -395,9 +396,8 @@
         }, 700)
 
         generateNomorUrut();
-
-        console.log(orderItemList);
         generateDataOnTable(orderItemList);
+        generateInput(orderItemList);
 
         document.getElementById("pilih-item").addEventListener("click", function() {
 

@@ -12,8 +12,6 @@ use Error;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\DB;
 
-use function PHPUnit\Framework\isEmpty;
-
 class UkurController extends Controller
 {
   public function cariSeragam(Request $request)
@@ -22,10 +20,10 @@ class UkurController extends Controller
     $jenjang = $request->query('jenjang');
 
     $seragams = DB::table('seragams')
-      ->whereRaw('LOWER(nama_barang) LIKE ?', ["%$search%"])
       ->select('id', 'nama_barang', 'jenjang', 'jenis_kelamin', 'ukuran', 'stok', 'harga')
-      ->when($jenjang, function(Builder $builder) use($jenjang){
-        return $builder->where('jenjang','LIKE',"%$jenjang%");
+      ->whereRaw('LOWER(nama_barang) LIKE ?', ["%$search%"])
+      ->when($jenjang, function (Builder $builder) use ($jenjang) {
+        return $builder->where('jenjang', 'LIKE', "%$jenjang%");
       })
       ->get();
 
@@ -65,7 +63,7 @@ class UkurController extends Controller
 
       foreach ($seragams as $seragam) {
         if ($seragams[$pointer]->nama_barang === $seragam->nama_barang && $seragams[$pointer]->id !== $seragam->id) {
-          $data[$pointer]['semua_ukuran'][] = [
+          $data[count($data) - 1]['semua_ukuran'][] = [
             'id' => $seragam->id,
             'nama_barang' => $seragam->nama_barang,
             'jenjang' => $seragam->jenjang,
@@ -167,14 +165,12 @@ class UkurController extends Controller
 
     try {
       // TODO: logic bikin order baru
-      
       DB::beginTransaction();
+
       $stokMinimum = DB::table('seragams')
-      ->whereIn('id', $validatedData['seragam_id'])
-      ->where('stok', '>', 0)
-      ->get();
-      
-      
+        ->whereIn('id', $validatedData['seragam_id'])
+        ->where('stok', '>', 0)
+        ->get();
 
       switch ($request->input('action')) {
         case 'complete':
@@ -183,7 +179,7 @@ class UkurController extends Controller
             'nomor_urut' => $validatedData['nomor_urut'],
             'nama_lengkap' => $validatedData['nama_lengkap'],
             'jenis_kelamin' => $validatedData['jenis_kelamin'],
-            'status' => $stokMinimum->isEmpty() ? 'draft':'on-process',
+            'status' => $stokMinimum->isEmpty() ? 'draft' : 'on-process',
           ]);
 
           break;
@@ -263,7 +259,6 @@ class UkurController extends Controller
       'seragam_id.*' => 'required|numeric|exists:seragams,id',
       'qty.*' => 'required|numeric|min:1'
     ]);
-
 
     try {
       // TODO: logic update order

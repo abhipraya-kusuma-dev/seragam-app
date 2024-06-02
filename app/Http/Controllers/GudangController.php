@@ -9,7 +9,6 @@ use Exception;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 
 class GudangController extends Controller
 {
@@ -127,37 +126,44 @@ class GudangController extends Controller
   public function daftarSeragam(Request $request)
   {
     $namaBarang = $request->query('nama_barang');
-    $orderBy = $request->query('orderBy');
     $namaUkuran = $request->query('ukuran');
-    $Harga = $request->query('harga');
-    $Stok = $request->query('stok');
-    $orderMasuk = Carbon::parse($request->query('created_at'));
-    $orderKeluar = Carbon::parse($request->query('complete_timestamp'));
+    $harga = $request->query('harga');
+    $stok = $request->query('stok');
+
+    $orderMasuk = $request->query('created_at');
+    $orderKeluar = $request->query('complete_timestamp');
+
+    $orderByNamaBarang = $request->query('orderBy', 'asc');
+    $orderByTanggalOrder = $request->query('orderByTanggalOrder', 'asc');
+    $orderByStok = $request->query('orderByStok', 'asc');
+    $orderByHarga = $request->query('orderByHarga', 'asc');
+    $orderByUkuran = $request->query('orderByUkuran', 'asc');
+
     $seragams = DB::table('seragams')
-      ->select('id', 'nama_barang', 'jenjang', 'jenis_kelamin', 'ukuran', 'stok', 'harga','created_at','complete_timestamp')
-      ->when($namaBarang, function(Builder $builder) use($namaBarang){
-        return $builder->where('nama_barang','LIKE',"%$namaBarang%");
+      ->select('id', 'nama_barang', 'jenjang', 'jenis_kelamin', 'ukuran', 'stok', 'harga', 'created_at', 'complete_timestamp')
+      ->when($namaBarang, function (Builder $builder) use ($namaBarang) {
+        return $builder->where('nama_barang', 'LIKE', "%$namaBarang%");
       })
-      ->when($namaUkuran, function(Builder $builder) use($namaUkuran){
-        return $builder->where('ukuran','LIKE', "%$namaUkuran%");
+      ->when($namaUkuran, function (Builder $builder) use ($namaUkuran) {
+        return $builder->where('ukuran', $namaUkuran);
       })
-      ->when($Harga, function (Builder $builder) use($Harga){
-        return $builder->where('harga','LIKE', "%$Harga%");
+      ->when($harga, function (Builder $builder) use ($harga) {
+        return $builder->where('harga', 'LIKE', "%$harga%");
       })
-      ->when($Stok, function(Builder $builder) use($Stok){
-        return $builder->where('stok','LIKE', "%$Stok%");
+      ->when($stok, function (Builder $builder) use ($stok) {
+        return $builder->where('stok', $stok);
       })
-      ->when($orderMasuk,function(Builder $builder)use($orderMasuk){
-        return $builder->whereDate('created_at','LIKE', "%$orderMasuk%");
+      ->when($orderMasuk, function (Builder $builder) use ($orderMasuk) {
+        return $builder->whereDate('created_at', Carbon::parse($orderMasuk)->format('Y-m-d'));
       })
-      ->when($orderKeluar, function(Builder $builder)use($orderKeluar){
-        return $builder->whereDate('complete_timestamp','LIKE', "%$orderKeluar%");
+      ->when($orderKeluar, function (Builder $builder) use ($orderKeluar) {
+        return $builder->whereDate('complete_timestamp', Carbon::parse($orderKeluar)->format('Y-m-d'));
       })
-      ->orderBy('created_at', $orderBy)
-      ->orderBy('stok', $orderBy)
-      ->orderBy('harga', $orderBy)
-      ->orderBy('ukuran', $orderBy)
-      ->orderBy('nama_barang', $orderBy)
+      ->orderBy('created_at', $orderByTanggalOrder)
+      ->orderBy('stok', $orderByStok)
+      ->orderBy('harga', $orderByHarga)
+      ->orderBy('ukuran', $orderByUkuran)
+      ->orderBy('nama_barang', $orderByNamaBarang)
       ->get();
 
     $data = [];
