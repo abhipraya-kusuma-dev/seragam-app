@@ -124,16 +124,46 @@ class GudangController extends Controller
     }
   }
 
-  public function daftarSeragam()
+  public function daftarSeragam(Request $request)
   {
+    $namaBarang = $request->query('nama_barang');
+    $orderBy = $request->query('orderBy');
+    $namaUkuran = $request->query('ukuran');
+    $Harga = $request->query('harga');
+    $Stok = $request->query('stok');
+    $orderMasuk = $request->query('created_at');
+    $orderKeluar = $request->query('complete_timestamp');
     $seragams = DB::table('seragams')
-      ->select('id', 'nama_barang', 'jenjang', 'jenis_kelamin', 'ukuran', 'stok', 'harga')
+      ->select('id', 'nama_barang', 'jenjang', 'jenis_kelamin', 'ukuran', 'stok', 'harga','created_at','complete_timestamp')
+      ->when($namaBarang, function(Builder $builder) use($namaBarang){
+        return $builder->where('nama_barang',$namaBarang);
+      })
+      ->when($namaUkuran, function(Builder $builder) use($namaUkuran){
+        return $builder->where('ukuran', $namaUkuran);
+      })
+      ->when($Harga, function (Builder $builder) use($Harga){
+        return $builder->where('harga', $Harga);
+      })
+      ->when($Stok, function(Builder $builder) use($Stok){
+        return $builder->where('stok', $Stok);
+      })
+      ->when($orderMasuk,function(Builder $builder)use($orderMasuk){
+        return $builder->where('created_at', $orderMasuk)->setTimezone('Asia/Jakarta/WIB');
+      })
+      ->when($orderKeluar, function(Builder $builder)use($orderKeluar){
+        return $builder->where('complete_timestamp', $orderKeluar)->setTimezone('Asia/Jakarta/WIB');
+      })
+      ->orderBy('created_at', $orderBy)
+      ->orderBy('stok', $orderBy)
+      ->orderBy('harga', $orderBy)
+      ->orderBy('ukuran', $orderBy)
+      ->orderBy('nama_barang', $orderBy)
       ->get();
 
     $data = [];
     $pointer = 0;
 
-    $list_ukuran_fix = ['S', 'M', 'L', 'XL', 'XXL', 'XXXL', 'XXXXL', 'XXXXXL', '11', '13', '15', '17', '19', '21', '23', '25', '27', '29', '31', '33', '35', '37', '39', '41'];
+    $list_ukuran_fix = ['S', 'M', 'L', 'XL', 'XXL', 'XXXL', 'XXXXL', 'XXXXXL', '11', '13', '15', '17', '19', '21', '23', '25', '27', '29', '31', '33', '35', '37', '39', '41', 'universal'];
 
     while ($seragams->count() > $pointer) {
       $isExists = false;

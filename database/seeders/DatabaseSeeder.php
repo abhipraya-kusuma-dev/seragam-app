@@ -92,7 +92,7 @@ class DatabaseSeeder extends Seeder
 
     // NOTE: bisa order 2 baju kah per orang ?
     Order::create([
-      'nomor_urut' => 'P980',
+      'nomor_urut' => 'P000',
       'jenjang' => 'smp',
       'nama_lengkap' => 'John Doe',
       'jenis_kelamin' => 'cowo',
@@ -114,7 +114,7 @@ class DatabaseSeeder extends Seeder
     ]);
 
     Order::create([
-      'nomor_urut' => 'P981',
+      'nomor_urut' => 'P000',
       'jenjang' => 'smp',
       'nama_lengkap' => 'Yanto',
       'jenis_kelamin' => 'cowo',

@@ -12,15 +12,21 @@ use Error;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\DB;
 
+use function PHPUnit\Framework\isEmpty;
+
 class UkurController extends Controller
 {
   public function cariSeragam(Request $request)
   {
     $search = $request->query('search');
+    $jenjang = $request->query('jenjang');
 
     $seragams = DB::table('seragams')
       ->whereRaw('LOWER(nama_barang) LIKE ?', ["%$search%"])
       ->select('id', 'nama_barang', 'jenjang', 'jenis_kelamin', 'ukuran', 'stok', 'harga')
+      ->when($jenjang, function(Builder $builder) use($jenjang){
+        return $builder->where('jenjang','LIKE',"%$jenjang%");
+      })
       ->get();
 
     $data = [];
@@ -158,9 +164,17 @@ class UkurController extends Controller
       'qty.*' => 'required|numeric|min:1'
     ]);
 
+
     try {
       // TODO: logic bikin order baru
+      
       DB::beginTransaction();
+      $stokMinimum = DB::table('seragams')
+      ->whereIn('id', $validatedData['seragam_id'])
+      ->where('stok', '>', 0)
+      ->get();
+      
+      
 
       switch ($request->input('action')) {
         case 'complete':
@@ -169,7 +183,7 @@ class UkurController extends Controller
             'nomor_urut' => $validatedData['nomor_urut'],
             'nama_lengkap' => $validatedData['nama_lengkap'],
             'jenis_kelamin' => $validatedData['jenis_kelamin'],
-            'status' => 'on-process',
+            'status' => $stokMinimum->isEmpty() ? 'draft':'on-process',
           ]);
 
           break;
