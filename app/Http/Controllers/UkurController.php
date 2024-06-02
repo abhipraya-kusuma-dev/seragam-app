@@ -228,7 +228,7 @@ class UkurController extends Controller
     $semua_seragam = DB::table('statuses')
       ->join('seragams', 'seragams.id', 'statuses.seragam_id')
       ->where('statuses.order_id', $order->id)
-      ->select('seragams.id', 'seragams.nama_barang', 'seragams.ukuran', 'seragams.harga', 'statuses.kuantitas as QTY')
+      ->select('seragams.id', 'seragams.nama_barang', 'seragams.ukuran', 'seragams.harga', 'seragams.stok', 'statuses.kuantitas as QTY')
       ->get();
 
     foreach ($semua_seragam as $seragam) {

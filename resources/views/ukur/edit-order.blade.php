@@ -252,7 +252,7 @@
         }
 
         const generateInput = (list) => {
-            const hiddenInput = document.getElementById('hiddenInput');
+            const hiddenInput = document.getElementById('hidden-input');
 
             list.forEach(order => {
                 hiddenInput.innerHTML += `
@@ -393,7 +393,9 @@
                     method="POST">
                     @method('PATCH')
                     @csrf
-                    <div id="input-seragam-id"></div>
+                    <div id="hidden-input" class="hidden">
+
+                    </div>
                     <div>
                         <h1 class="font-bold">Nomor Urut</h1>
                         <input class="font-semibold bg-transparent cursor-not-allowed pointer-events-none"
@@ -458,20 +460,18 @@
                             class="outline-none border rounded border-black px-2 font-bold mt-2 mb-2"
                             placeholder="Tuliskan nama..." value="{{ $order->nama_lengkap }}" />
                     </div>
+                    <div class="flex gap-5">
+                        <button type="submit" name="action" value="complete" id="submit-button"
+                            class="w-[181px] h-[59px] bg-[#6F19DC] text-xl font-bold text-white rounded-xl border-white border"
+                            style="box-shadow: 2px 4px 6px 0 gray">Kirim</button>
+                        <button type="submit" name="action" value="draft" id="submit-button"
+                            class="w-[181px] h-[59px] bg-[#2BCB4E] text-xl font-bold text-white rounded-xl border-white border"
+                            style="box-shadow: 2px 4px 6px 0 gray">Simpan</button>
+                    </div>
+                </form>
             </div>
-            <div id="hidden-input" class="hidden">
-
-            </div>
-            <div class="flex gap-5">
-                <button type="submit" name="action" value="complete" id="submit-button"
-                    class="w-[181px] h-[59px] bg-[#6F19DC] text-xl font-bold text-white rounded-xl border-white border"
-                    style="box-shadow: 2px 4px 6px 0 gray">Kirim</button>
-                <button type="submit" name="action" value="draft" id="submit-button"
-                    class="w-[181px] h-[59px] bg-[#2BCB4E] text-xl font-bold text-white rounded-xl border-white border"
-                    style="box-shadow: 2px 4px 6px 0 gray">Simpan</button>
-            </div>
-            </form>
         </div>
+
         <div class="flex flex-col gap-4 items-end">
             <div>
                 <button id="pilih-item"
@@ -493,8 +493,6 @@
                     </tbody>
                 </table>
             </div>
-
-
         </div>
     </section>
 
