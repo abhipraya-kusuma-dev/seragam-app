@@ -253,7 +253,7 @@
     </div>
     <div class="current-page-bar-container px-[46px] mx-auto flex flex-col">
         <div class="current-page-bar flex gap-[13px] items-start">
-            <a class=" py-4 px-4 bg-[#6C0345] text-white font-semibold rounded-b-lg border-black border" href="">Buat
+            <a class=" py-4 px-4 bg-[#6C0345] text-white font-semibold rounded-b-lg border-black border" href="">Edit
                 Orderan</a>
             <a class=" py-2 px-8  bg-[#6675F7]/80 text-white/60 font-semibold rounded-b-lg border-black border hover:text-white hover:bg-[#6675F7] transition duration-500"
                 href="/ukur/order">List
