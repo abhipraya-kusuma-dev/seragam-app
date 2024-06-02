@@ -13,7 +13,7 @@
     <div class="content-container px-[76px] w-full mt-[92px] mb-4 flex justify-between">
         <form action="" id="status-form">
             <select class="select-condition font-bold text-3xl focus:outline-none bg-transparent" name="status">
-                <option class="text-base" value="on-process" {{ request()->query('status') === 'on-process'? 'selected' : ''}}>On-Porcess</option>
+                <option class="text-base" value="on-process" {{ request()->query('status') === 'on-process'? 'selected' : ''}}>On-Process</option>
                 <option class="text-base" value="draft" {{ request()->query('status') === 'draft'? 'selected' : ''}}>Draft</option>
                 <option class="text-base" value="selesai" {{ request()->query('status') === 'selesai'? 'selected' : ''}}>Selesai</option>
             </select>
@@ -42,11 +42,11 @@
                         <td class="px-2 text-left">{{ $order->nomor_urut  }}</td>
                         <td class="px-2 text-left">{{ $order->nama_lengkap }}</td>
                         <td class="px-2 text-left">{{ strtoupper($order->jenjang) }}</td>
-                        <td class="px-2 text-left bg-[#FF7878]">{{ $order->order_masuk }}</td>
+                        <td class="px-2 text-left">{{ $order->order_masuk }}</td>
                         @if( request()->query('status') === 'selesai')
-                        <td class="px-2 text-left bg-[#FF7878]">Order Keluar</td>
+                        <td class="px-2 text-left">Order Keluar</td>
                         @endif
-                        <td class="px-2 text-left bg-[#78BEFF]"><a href="/gudang/order/{{ $order->nomor_urut }}" class="text-white hover:underline">Lihat Order</a></td>
+                        <td class="px-2 text-left"><a href="/gudang/order/{{ $order->nomor_urut }}" class="hover:underline">Lihat Order</a></td>
                     </tr>
                 @endforeach
             </tbody>

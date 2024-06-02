@@ -78,7 +78,7 @@
             const totalHargaElement = document.getElementById('order-total-price');
 
             if (list.length < 1) {
-                totalHargaElement.textContent = '';
+                totalHargaElement.textContent = 'Total: Rp. 0';
             } else {
                 const totalHarga = list.map(order => {
                     return +order.harga.substring(4).replace('.', '') * order.QTY;
@@ -90,19 +90,105 @@
 
         }
 
+        let reopenObject = {};
+
+        const reopenGeneratedList = (index) =>{
+            const reopen = reopenObject;
+
+            const seragamItem = document.getElementById('seragam-item')
+            seragamItem.innerHTML = '';
+
+            const returnOptionUkuran = (order) => {
+                if(order.semua_ukuran){
+
+                    if (order.semua_ukuran.length > 0) {
+                        let optionElements = ''
+                        order.semua_ukuran.forEach((order) => {
+                            optionElements +=
+                                `<option value="${order.id}:${order.ukuran}:${order.stok}:${order.harga}" class="text-black">${order.ukuran}</option>`
+                        })
+
+                        return optionElements
+                    }
+                } else {
+                    return;
+                }
+            }
+
+            
+                document.getElementById('seragam-item').innerHTML += `<div class=" h-max border-2 border border-black rounded-xl relative">
+                    <div class="px-5 py-3 flex flex-col gap-3">
+                        <div>
+                            <h1 class="font-bold text-2xl">${reopen.nama_barang}</h1>
+                            <p>${reopen.harga} / Pcs</p>
+                        </div>
+                        <div class="flex gap-3 items-center">
+                            <div class="relative flex w-max items-center gap-1 rounded-3xl border border-black bg-green-500 py-1">
+                                <label for="ukuran" class="absolute right-2">
+                                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="#ffff" class="size-4">
+                                      <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+                                  </svg>
+                                </label>
+                                <select onchange="changeUkuran(this.value, ${index})" id='ukuran${index}' name="ukuran${index}" class="option:text-black relative appearance-none bg-transparent px-6 text-xl font-semibold text-white outline-none">
+                                    <option value="${reopen.id}:${reopen.ukuran}:${reopen.stok}:${reopen.harga}" class="text-black">${reopen.ukuran}</option>
+                                    <!--${returnOptionUkuran(reopen)}-->
+                                </select>
+                            </div>
+                            <div class="border border-black rounded-lg px-1 w-full py-1 flex justify-between">
+                                <button onclick="decrementQTY(${index})">
+                                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="size-5">
+                                    <path fill-rule="evenodd" d="M4 10a.75.75 0 0 1 .75-.75h10.5a.75.75 0 0 1 0 1.5H4.75A.75.75 0 0 1 4 10Z" clip-rule="evenodd" />
+                                  </svg>
+                                </button>
+                                <span id="qty${index}">${reopen.QTY}</span>
+                                <button onclick="incrementQTY(${index})">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="size-5">
+                                        <path d="M10.75 4.75a.75.75 0 0 0-1.5 0v4.5h-4.5a.75.75 0 0 0 0 1.5h4.5v4.5a.75.75 0 0 0 1.5 0v-4.5h4.5a.75.75 0 0 0 0-1.5h-4.5v-4.5Z" />
+                                    </svg>
+                                </button>
+                            </div>
+                            <div class="pr-1 w-full">
+                                <p id='stok${index}' class="font-semibold">Stok: ${reopen.stok}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <button onclick="addOrderItem(this, ${index})" class="w-14 h-14 bg-green-500 flex justify-center items-center font-bold rounded-[2000px] absolute -right-5 -top-4">
+                          <span class="hidden" id="order-item-${index}">${JSON.stringify({...reopen, QTY: 0})}</span>
+                          <svg
+                              xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                              stroke-width="5" stroke="#ffff" class="size-9">
+                              <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                          </svg>
+                      </button>
+                </div>`;
+            
+            
+        }
+
         const generateOrderItemList = (list) => {
             const orderItemListContainer = document.getElementById('order-item-list-container');
 
             orderItemListContainer.innerHTML = '';
 
+
             list.forEach((order, index) => {
+
+                const orderJsonString = JSON.stringify(order).replace(/"/g, '&quot;');
+
                 orderItemListContainer.innerHTML += `
                   <div class="order-item">
-                      <p
-                          class="border border-black rounded-lg bg-[#FF5656] font-semibold text-white px-2 relative">
+                      <p  id="order-item-${index}"
+                          class="border border-black rounded-lg bg-[#FF5656] font-semibold text-white px-2 relative pb-1">
                           ${order.nama_barang} (${order.ukuran})
-                          <span class="absolute bg-green-400 rounded-xl w-5 h-5 text-sm text-center -right-2 -bottom-2">${order.QTY}</span>
-                          <span onclick="deleteOrderItemList(${index})" class="absolute cursor-pointer border border-black bg-red-400 rounded-xl w-5 h-5 text-sm text-center -right-2 -top-2">X</span>
+                          <span onclick="
+                            console.log(${orderJsonString})
+                            reopenObject = ${orderJsonString}
+                            reopenGeneratedList(${index});
+                          " class="absolute cursor-pointer bg-green-400 rounded-xl w-5 h-5 text-sm text-center -right-2 -bottom-2">${order.QTY}</span>
+                          <span onclick="deleteOrderItemList(${index})" class="absolute cursor-pointer border border-black bg-red-400 rounded-xl w-5 h-5 text-sm text-center -right-2 -top-2 mb-2"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 21 21" fill="currentColor" class="size-5">
+                            <path d="M6.28 5.22a.75.75 0 0 0-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 1 0 1.06 1.06L10 11.06l3.72 3.72a.75.75 0 1 0 1.06-1.06L11.06 10l3.72-3.72a.75.75 0 0 0-1.06-1.06L10 8.94 6.28 5.22Z" />
+                            </svg>
+                          </span>
                       </p>
                       <p class="harga text-sm">${order.harga}</p>
                   </div>
@@ -166,10 +252,10 @@
         }
 
         const generateInput = (list) => {
-            const formContainer = document.getElementById('create-and-edit-form');
+            const hiddenInput = document.getElementById('hiddenInput');
 
             list.forEach(order => {
-                formContainer.innerHTML += `
+                hiddenInput.innerHTML += `
                   <input type="hidden" value="${order.id}" name="seragam_id[]" />
                   <input type="hidden" value="${order.QTY}" name="qty[]" />
                 `
@@ -177,12 +263,6 @@
         }
 
         const selesaiPilihItem = () => {
-            generateDataOnTable(orderItemList);
-            generateInput(orderItemList);
-            generateNomorUrut();
-
-            console.log(orderItemList);
-
             const popupContainer = document.getElementById("popupContainer");
             const popupBackground = document.getElementById("popupBackground");
             const popupContentContainer = document.getElementById("popupContentContainer");
@@ -196,6 +276,13 @@
             setTimeout(function() {
                 popupContainer.classList.add("opacity-0", "pointer-events-none");
             }, 300); // Match this duration to the transition duration
+
+            generateDataOnTable(orderItemList);
+            generateInput(orderItemList);
+            generateNomorUrut();
+
+            console.log(orderItemList);
+
         }
     </script>
     <x-navbar />
@@ -221,11 +308,11 @@
                         class=" no-scrollbar grid w-full grid-cols-2 gap-5 ml-1 h-[370px] overflow-y-auto overflow-hidden p-6">
                     </div>
                     <div class="">
-                        <div class="flex justify-end">
+                        <div class="flex mb-4 justify-end">
                             <div>
                                 <form action="" id="cari-item-form"
                                     class="px-2 border-2 border-black rounded-lg w-72 mr-7 px-2 py-1 flex justify-between">
-                                    <input id="cari-input" class=" bg-transparent outline-none" placeholder="Cari item..."
+                                    <input id="cari-input" class="bg-transparent outline-none" placeholder="Cari item..."
                                         type="text" name="cari-item" />
                                     <button class="bg-white w-5" type="submit"><img class="w-14"
                                             src="{{ asset('images/search.png') }}" alt=""></button>
@@ -237,14 +324,16 @@
                             <p class="pb-2">Periksa kembali orderan anda:</p>
                             <div class="border-t border-b h-40 border-black pb-2">
                                 <!-- order list disini -->
-                                <div class="grid grid-cols-2 gap-4 p-1" id="order-item-list-container"></div>
+                                <div class="h-40 grid grid-cols-2 gap-4 pt-3 pr-2 pb-2 overflow-y-auto" id="order-item-list-container">
+                                    
+                                </div>
                             </div>
                         </div>
 
                     </div>
                 </div>
                 <div class="bg-[#2BCB4E] w-full rounded-bl-2xl rounded-br-2xl py-4 flex justify-between items-center">
-                    <h1 class="font-bold text-3xl text-white ml-7" id="order-total-price">Total: Rp.</h1>
+                    <h1 class="font-bold text-3xl text-white ml-7" id="order-total-price">Total: Rp. 0</h1>
                     <button class="bg-[#4071EE] w-36 h-11 rounded-xl border-white border text-white font-bold text-xl mr-7"
                         style="box-shadow: 2px 4px 6px 0px gray" onclick="selesaiPilihItem()">Selesai</button>
                 </div>
@@ -253,20 +342,36 @@
     </div>
     <div class="current-page-bar-container px-[46px] mx-auto flex flex-col">
         <div class="current-page-bar flex gap-[13px] items-start">
-            <a class=" py-4 px-4 bg-[#6C0345] text-white font-semibold rounded-b-lg border-black border" href="">Buat
-                Orderan</a>
+            
+            <a class=" py-2 px-4 bg-[#6C0345]/80 text-white/60 font-semibold rounded-b-lg border-black border hover:text-white hover:bg-[#6C0345] transition duration-500"
+                href="/ukur/bikin">Buat Orderan
+            </a>
             <a class=" py-2 px-8  bg-[#6675F7]/80 text-white/60 font-semibold rounded-b-lg border-black border hover:text-white hover:bg-[#6675F7] transition duration-500"
-                href="/ukur/order">List
-                Order</a>
+                href="/ukur/order">List Order
+            </a>
+            <a class=" py-4 px-4 bg-[#6F19DC] text-white font-semibold rounded-b-lg border-black border" href="">Edit
+                Orderan</a>
         </div>
     </div>
 
     <div class="px-[46px]">
         @if (session('update-success'))
-            <p class="text-green-600">{{ session('update-success') }}</p>
+            <script>
+                window.addEventListener('load', function() {
+                    setTimeout(function() {
+                        alert('{{ session('update-success') }}');
+                    }, 100);
+                });
+            </script>
         @endif
         @if (session('update-error'))
-            <p class="text-red-600">{{ session('update-error') }}</p>
+        <script>
+            window.addEventListener('load', function() {
+                setTimeout(function() {
+                    alert('{{ session('update-error') }}');
+                }, 100);
+            });
+        </script>
         @endif
 
         @if ($errors->any())
@@ -349,9 +454,12 @@
                     <div>
                         <label for="nama_lengkap" class="font-bold">Nama Lengkap</label><br>
                         <input list="list_nama_barang" id="nama_lengkap" name="nama_lengkap"
-                            class="outline-none border rounded border-black px-2 font-bold mt-2"
+                            class="outline-none border rounded border-black px-2 font-bold mt-2 mb-2"
                             placeholder="Tuliskan nama..." value="{{ $order->nama_lengkap }}" />
                     </div>
+            </div>
+            <div id="hidden-input" class="hidden">
+
             </div>
             <div class="flex gap-5">
                 <button type="submit" name="action" value="complete" id="submit-button"
