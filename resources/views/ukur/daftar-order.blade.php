@@ -15,7 +15,7 @@
         <form action="" id="status-form">
             <select class="select-condition font-bold text-3xl focus:outline-none bg-transparent" name="status">
                 <option class="text-base" value="on-process"
-                    {{ request()->query('status') === 'on-process' ? 'selected' : '' }}>On-Porcess</option>
+                    {{ request()->query('status') === 'on-process' ? 'selected' : '' }}>On-Process</option>
                 <option class="text-base" value="draft" {{ request()->query('status') === 'draft' ? 'selected' : '' }}>
                     Draft
                 </option>
@@ -47,20 +47,27 @@
                         <td class="px-2 text-left">{{ $order->nomor_urut }}</td>
                         <td class="px-2 text-left">{{ $order->nama_lengkap }}</td>
                         <td class="px-2 text-left">{{ strtoupper($order->jenjang) }}</td>
-                        <td class="px-2 text-left bg-[#FF7878]">{{ $order->order_masuk }}</td>
+                        <td class="px-2 text-left">{{ $order->order_masuk }}</td>
                         @if (request()->query('status') === 'selesai')
-                            <td class="px-2 text-left bg-[#FF7878]">Order Keluar</td>
+                            <td class="px-2 text-left">Order Keluar</td>
                         @endif
-                        <td class="px-2 text-left bg-[#fff] flex space-x-2">
+                        <td >
+                            <div class="px-2 text-left bg-[#fff] flex space-x-2">
                             <a href="/ukur/{{ $order->nomor_urut }}/edit" class="text-yellow-500 hover:underline">Edit
-                                Order</a>
+                                Order</a> <span>|</span>
                             <a href="/ukur/{{ $order->nomor_urut }}" class="text-sky-600 hover:underline">Lihat Order</a>
-
+                            <span>|</span>
+                            <form action="/ukur/confirm/{{ $order->id }}" method="post">
+                                @method('POST')
+                                @csrf
+                                <button class="text-green-600 hover:underline" onclick="return confirm('Apakah orderan sudah selesai?')">Orderan Selesai</button>
+                            </form> <span>|</span>
                             <form action="/ukur/delete/{{ $order->id }}" method="post">
                                 @method('DELETE')
                                 @csrf
-                                <button class="text-red-600" onclick="return confirm('yakin?')">Hapus Order</button>
+                                <button class="text-red-600 hover:underline" onclick="return confirm('Yakin ingin menghapus orderan?')">Hapus Order</button>
                             </form>
+                            </div>
                         </td>
                     </tr>
                 @endforeach
