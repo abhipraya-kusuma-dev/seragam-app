@@ -128,27 +128,27 @@ class GudangController extends Controller
     $namaUkuran = $request->query('ukuran');
     $Harga = $request->query('harga');
     $Stok = $request->query('stok');
-    $orderMasuk = $request->query('created_at');
-    $orderKeluar = $request->query('complete_timestamp');
+    $orderMasuk = Carbon::parse($request->query('created_at'));
+    $orderKeluar = Carbon::parse($request->query('complete_timestamp'));
     $seragams = DB::table('seragams')
       ->select('id', 'nama_barang', 'jenjang', 'jenis_kelamin', 'ukuran', 'stok', 'harga','created_at','complete_timestamp')
       ->when($namaBarang, function(Builder $builder) use($namaBarang){
-        return $builder->where('nama_barang',$namaBarang);
+        return $builder->where('nama_barang','LIKE',$namaBarang);
       })
       ->when($namaUkuran, function(Builder $builder) use($namaUkuran){
-        return $builder->where('ukuran', $namaUkuran);
+        return $builder->where('ukuran','LIKE', $namaUkuran);
       })
       ->when($Harga, function (Builder $builder) use($Harga){
-        return $builder->where('harga', $Harga);
+        return $builder->where('harga','LIKE', $Harga);
       })
       ->when($Stok, function(Builder $builder) use($Stok){
-        return $builder->where('stok', $Stok);
+        return $builder->where('stok','LIKE', $Stok);
       })
       ->when($orderMasuk,function(Builder $builder)use($orderMasuk){
-        return $builder->where('created_at', $orderMasuk)->setTimezone('Asia/Jakarta/WIB');
+        return $builder->whereDate('created_at', $orderMasuk);
       })
       ->when($orderKeluar, function(Builder $builder)use($orderKeluar){
-        return $builder->where('complete_timestamp', $orderKeluar)->setTimezone('Asia/Jakarta/WIB');
+        return $builder->whereDate('complete_timestamp', $orderKeluar);
       })
       ->orderBy('created_at', $orderBy)
       ->orderBy('stok', $orderBy)
