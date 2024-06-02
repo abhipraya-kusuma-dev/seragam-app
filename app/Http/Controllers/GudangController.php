@@ -133,22 +133,22 @@ class GudangController extends Controller
     $seragams = DB::table('seragams')
       ->select('id', 'nama_barang', 'jenjang', 'jenis_kelamin', 'ukuran', 'stok', 'harga','created_at','complete_timestamp')
       ->when($namaBarang, function(Builder $builder) use($namaBarang){
-        return $builder->where('nama_barang','LIKE',$namaBarang);
+        return $builder->where('nama_barang','LIKE',"%$namaBarang%");
       })
       ->when($namaUkuran, function(Builder $builder) use($namaUkuran){
-        return $builder->where('ukuran','LIKE', $namaUkuran);
+        return $builder->where('ukuran','LIKE', "%$namaUkuran%");
       })
       ->when($Harga, function (Builder $builder) use($Harga){
-        return $builder->where('harga','LIKE', $Harga);
+        return $builder->where('harga','LIKE', "%$Harga%");
       })
       ->when($Stok, function(Builder $builder) use($Stok){
-        return $builder->where('stok','LIKE', $Stok);
+        return $builder->where('stok','LIKE', "%$Stok%");
       })
       ->when($orderMasuk,function(Builder $builder)use($orderMasuk){
-        return $builder->whereDate('created_at', $orderMasuk);
+        return $builder->whereDate('created_at','LIKE', "%$orderMasuk%");
       })
       ->when($orderKeluar, function(Builder $builder)use($orderKeluar){
-        return $builder->whereDate('complete_timestamp', $orderKeluar);
+        return $builder->whereDate('complete_timestamp','LIKE', "%$orderKeluar%");
       })
       ->orderBy('created_at', $orderBy)
       ->orderBy('stok', $orderBy)
