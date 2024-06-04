@@ -116,7 +116,8 @@ class GudangController extends Controller
 
       DB::commit();
 
-      return back()->with('update-success', 'Berhasil mengubah data order!');
+      /*return back()->with('update-success', 'Berhasil mengubah data order!');*/
+      return redirect('/gudang/order/')->with('update-success', 'Berhasil mengubah data order!');
     } catch (Exception $e) {
       DB::rollBack();
       return back()->with('update-error', $e->getMessage());
@@ -130,9 +131,6 @@ class GudangController extends Controller
     $harga = $request->query('harga');
     $stok = $request->query('stok');
 
-    $orderMasuk = $request->query('created_at');
-    $orderKeluar = $request->query('complete_timestamp');
-
     $orderByNamaBarang = $request->query('orderBy', 'asc');
     $orderByTanggalOrder = $request->query('orderByTanggalOrder', 'asc');
     $orderByStok = $request->query('orderByStok', 'asc');
@@ -140,7 +138,7 @@ class GudangController extends Controller
     $orderByUkuran = $request->query('orderByUkuran', 'asc');
 
     $seragams = DB::table('seragams')
-      ->select('id', 'nama_barang', 'jenjang', 'jenis_kelamin', 'ukuran', 'stok', 'harga', 'created_at', 'complete_timestamp')
+      ->select('id', 'nama_barang', 'jenjang', 'jenis_kelamin', 'ukuran', 'stok', 'harga', 'created_at')
       ->when($namaBarang, function (Builder $builder) use ($namaBarang) {
         return $builder->where('nama_barang', 'LIKE', "%$namaBarang%");
       })
@@ -152,12 +150,6 @@ class GudangController extends Controller
       })
       ->when($stok, function (Builder $builder) use ($stok) {
         return $builder->where('stok', $stok);
-      })
-      ->when($orderMasuk, function (Builder $builder) use ($orderMasuk) {
-        return $builder->whereDate('created_at', Carbon::parse($orderMasuk)->format('Y-m-d'));
-      })
-      ->when($orderKeluar, function (Builder $builder) use ($orderKeluar) {
-        return $builder->whereDate('complete_timestamp', Carbon::parse($orderKeluar)->format('Y-m-d'));
       })
       ->orderBy('created_at', $orderByTanggalOrder)
       ->orderBy('stok', $orderByStok)

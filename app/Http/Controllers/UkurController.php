@@ -293,7 +293,8 @@ class UkurController extends Controller
       DB::commit();
 
       // return 'Berhasil update order';
-      return back()->with('update-success', 'Berhasil update order');
+      /*return back()->with('update-success', 'Berhasil update order');*/
+      return redirect('/ukur/bikin')->with('update-success', 'Berhasil update order');
     } catch (Exception $e) {
       DB::rollBack();
       return 'Gagal update order' . $e->getMessage();
