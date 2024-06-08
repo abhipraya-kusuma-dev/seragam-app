@@ -556,9 +556,18 @@
 
             const cariVal = document.getElementById('cari-input').value;
 
+            let jenjangVal = '';
+            
+            document.querySelectorAll('input[name="jenjang"]')
+            .forEach((radio) => {
+                if(radio.checked){
+                    jenjangVal = radio.value;
+                }
+            });
+
             const fetchData = async () => {
-                const res = await fetch(`/api/seragam?search=${cariVal}`)
-                const data = await res.json()
+                const res = await fetch(`/api/seragam?search=${cariVal}&jenjang=${jenjangVal}`);
+                const data = await res.json();
                 const orders = data.orders;
 
                 document.getElementById('seragam-item').innerHTML = ""
