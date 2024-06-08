@@ -26,8 +26,11 @@
                     Selesai</option>
             </select>
         </form>
-        <form class="mt-4 ">
-            <input class="py-1 px-2 border border-black rounded" type="text" placeholder="Cari">
+        <form class="mt-4 py-1 px-2 border border-black rounded" method="GET">
+            <input type="text" class="hidden" name="status" value="{{ request()->query('status', 'on-process') }}">
+            <input class="outline-none" name="search" type="text" placeholder="Cari">
+            <button type="submit"><img class="w-4"
+                src="{{ asset('images/search.png') }}" alt=""></button>
         </form>
     </div>
     <div class="table-container px-[76px]">

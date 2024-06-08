@@ -477,12 +477,9 @@
                         </div>
                     </div>
                     <div class="flex gap-5">
-                        <button type="submit" name="action" value="complete" id="submit-button"
-                            class="w-[181px] h-[59px] bg-[#6F19DC] text-xl font-bold text-white rounded-xl border-white border"
-                            style="box-shadow: 2px 4px 6px 0 gray">Kirim</button>
-                        <button type="submit" name="action" value="draft" id="submit-button"
+                        <button type="submit" name="action" value="update" id="submit-button"
                             class="w-[181px] h-[59px] bg-[#2BCB4E] text-xl font-bold text-white rounded-xl border-white border"
-                            style="box-shadow: 2px 4px 6px 0 gray">Simpan</button>
+                            style="box-shadow: 2px 4px 6px 0 gray">Update</button>
                     </div>
                 </form>
             
