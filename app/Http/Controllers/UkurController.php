@@ -213,8 +213,7 @@ class UkurController extends Controller
     } catch (Exception $e) {
       DB::rollBack();
 
-      return "Gagal bikin order:" . $e->getMessage();
-      // return back()->with('create-error', 'Gagal bikin order ' . $e->getMessage());
+      return back()->with('create-error', 'Gagal bikin order ' . $e->getMessage());
     }
   }
 
