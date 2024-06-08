@@ -92,7 +92,7 @@ class GudangController extends Controller
             ->where('nomor_urut', $nomor_urut)
             ->update([
               'complete_timestamp' => now(),
-              'status' => 'selesai',
+              'status' => 'siap',
             ]);
           break;
       }
