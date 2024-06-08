@@ -316,16 +316,12 @@ class UkurController extends Controller
   }
   public function confirmOrder($id)
   {
-    try
-    {
-      $confirmed = Order::where('id', $id)
-      ->update(['status' => 'selesai']);
+    try {
+      Order::where('id', $id)
+        ->update(['status' => 'selesai']);
       return back()->with('confirmed-success', 'Berhasil konfirmasi order');
+    } catch (Exception $e) {
+      return back()->with('confirmed-error', 'Gagal konfirmasi order' . $e->getMessage());
     }
-    catch (Exception $e)
-    {
-      return back()->with('confirmed-error', 'Gagal konfirmasi order'.$e->getMessage());
-    }
-    
   }
 }
