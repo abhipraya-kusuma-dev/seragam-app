@@ -103,7 +103,7 @@ class UkurController extends Controller
     foreach ($orders as $order) {
       $order->order_masuk = Carbon::parse($order->order_masuk)
         ->setTimezone('Asia/Jakarta')
-        ->format('d/m/y | h:m');
+        ->format('d/m/y | h:i');
     }
 
     return view('ukur.daftar-order', [
@@ -314,5 +314,19 @@ class UkurController extends Controller
       // return 'Gagal hapus order' . $e->getMessage();
       return back()->with('delete-error', 'Gagal hapus order' . $e->getMessage());
     }
+  }
+  public function confirmOrder($id)
+  {
+    try
+    {
+      $confirmed = Order::where('id', $id)
+      ->update(['status' => 'selesai']);
+      return back()->with('confirmed-success', 'Berhasil konfirmasi order');
+    }
+    catch (Exception $e)
+    {
+      return back()->with('confirmed-error', 'Gagal konfirmasi order'.$e->getMessage());
+    }
+    
   }
 }
