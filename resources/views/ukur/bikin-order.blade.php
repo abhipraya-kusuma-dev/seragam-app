@@ -285,6 +285,8 @@
             generateInput(orderItemList);
 
             console.log(orderItemList);
+
+
         }
     </script>
     <x-navbar />
@@ -374,22 +376,36 @@
         @endif
 
         @if ($errors->any())
-            <div class="bg-red-600 text-white">
-                <ul>
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
+        <script>
+            window.addEventListener('load', function() {
+                let errors = @json($errors->all());
+                
+
+                function capitalizeFirstLetter(string){
+                    return string.charAt(0).toUpperCase() + string.slice(1);
+                }
+
+                let modifiedErrors = errors.map((error) => {
+                    return error.replace(/The (.+?) field is required\./, function(match, p1){
+                        return capitalizeFirstLetter(p1) + ' harus diisi'
+                    });
+                });
+
+                let errorMessages = modifiedErrors.join('\n'); // Join all errors into a single string separated by new lines
+                setTimeout(function() {
+                    alert(errorMessages);
+                }, 100);
+            });
+        </script>
         @endif
     </div>
 
     <section class="flex justify-between py-10 px-[46px]">
 
         <div class="flex flex-col gap-5">
-            <div class="border rounded-xl border-black px-4 py-2" style="box-shadow: 2px 4px 6px rgb(177, 177, 177)">
-                <form id="create-and-edit-form" action="/ukur/bikin" class="flex flex-col gap-4" method="POST">
-                    @csrf
+            <form id="create-and-edit-form" action="/ukur/bikin" class="flex flex-col gap-4" method="POST">
+                @csrf
+                <div class="border rounded-xl border-black px-4 py-2 flex flex-col gap-4" style="box-shadow: 2px 4px 6px rgb(177, 177, 177)">
                     <div id="hidden-input" class="hidden">
 
                     </div>
@@ -408,36 +424,36 @@
                                 class="hidden" />
                         </label>
 
-                        <label for="smp"
-                            class="has-[:checked]:border-2 has-[:checked]:border-[#3485FF] has-[:checked]:bg-white has-[:checked]:text-[#3485FF] border-2 border-transparent select-none text-center rounded-[8px] py-1 px-7 bg-[#3485FF] text-white font-semibold"
-                            style="box-shadow: 2px 4px 5px rgb(177, 177, 177)">
-                            SMP
-                            <input type="radio" name="jenjang" id="smp" value="smp" class="hidden" />
-                        </label>
+                            <label for="smp"
+                                class="has-[:checked]:border-2 has-[:checked]:border-[#3485FF] has-[:checked]:bg-white has-[:checked]:text-[#3485FF] border-2 border-transparent select-none text-center rounded-[8px] py-1 px-7 bg-[#3485FF] text-white font-semibold"
+                                style="box-shadow: 2px 4px 5px rgb(177, 177, 177)">
+                                SMP
+                                <input type="radio" name="jenjang" id="smp" value="smp" class="hidden" />
+                            </label>
 
-                        <label for="sma"
-                            class="has-[:checked]:border-2 has-[:checked]:border-[#2BCB4E] has-[:checked]:bg-white has-[:checked]:text-[#2BCB4E] border-2 border-transparent select-none text-center rounded-[8px] py-1 px-7 bg-[#2BCB4E] text-white font-semibold"
-                            style="box-shadow: 2px 4px 5px rgb(177, 177, 177)">
-                            SMA
-                            <input type="radio" name="jenjang" id="sma" value="sma" class="hidden" />
-                        </label>
+                            <label for="sma"
+                                class="has-[:checked]:border-2 has-[:checked]:border-[#2BCB4E] has-[:checked]:bg-white has-[:checked]:text-[#2BCB4E] border-2 border-transparent select-none text-center rounded-[8px] py-1 px-7 bg-[#2BCB4E] text-white font-semibold"
+                                style="box-shadow: 2px 4px 5px rgb(177, 177, 177)">
+                                SMA
+                                <input type="radio" name="jenjang" id="sma" value="sma" class="hidden" />
+                            </label>
 
-                        <label for="smk"
-                            class="has-[:checked]:border-2 has-[:checked]:border-[#DC6B19] has-[:checked]:bg-white has-[:checked]:text-[#DC6B19] border-2 border-transparent select-none text-center rounded-[8px] py-1 px-7 bg-[#DC6B19] text-white font-semibold"
-                            style="box-shadow: 2px 4px 5px rgb(177, 177, 177)">
-                            SMK
-                            <input type="radio" name="jenjang" id="smk" value="smk" class="hidden" />
-                        </label>
-                    </div>
+                            <label for="smk"
+                                class="has-[:checked]:border-2 has-[:checked]:border-[#DC6B19] has-[:checked]:bg-white has-[:checked]:text-[#DC6B19] border-2 border-transparent select-none text-center rounded-[8px] py-1 px-7 bg-[#DC6B19] text-white font-semibold"
+                                style="box-shadow: 2px 4px 5px rgb(177, 177, 177)">
+                                SMK
+                                <input type="radio" name="jenjang" id="smk" value="smk" class="hidden" />
+                            </label>
+                        </div>
 
-                    <h1 class="font-bold">Jenis Kelamin</h1>
-                    <div class="flex items-center gap-4">
-                        <label for="cowo"
-                            class="has-[:checked]:border-2 has-[:checked]:border-[#3485FF] has-[:checked]:bg-white has-[:checked]:text-[#3485FF] border-2 border-transparent select-none rounded-[8px] py-1 px-7 bg-[#3485FF] text-white font-semibold"
-                            style="box-shadow: 2px 4px 5px rgb(177, 177, 177)">
-                            Pria
-                            <input type="radio" name="jenis_kelamin" id="cowo" value="cowo" class="hidden" />
-                        </label>
+                        <h1 class="font-bold">Jenis Kelamin</h1>
+                        <div class="flex items-center gap-4">
+                            <label for="cowo"
+                                class="has-[:checked]:border-2 has-[:checked]:border-[#3485FF] has-[:checked]:bg-white has-[:checked]:text-[#3485FF] border-2 border-transparent select-none rounded-[8px] py-1 px-7 bg-[#3485FF] text-white font-semibold"
+                                style="box-shadow: 2px 4px 5px rgb(177, 177, 177)">
+                                Pria
+                                <input type="radio" name="jenis_kelamin" id="cowo" value="cowo" class="hidden" />
+                            </label>
 
                         <label for="cewe"
                             class="has-[:checked]:border-2 has-[:checked]:border-[#FF34C6] has-[:checked]:bg-white has-[:checked]:text-[#FF34C6] border-2 border-2 border-transparent select-none rounded-[8px] py-1 px-5 bg-[#FF34C6] text-white font-semibold"
@@ -452,16 +468,17 @@
                             class="outline-none border rounded border-black px-2 font-bold mt-2 mb-2"
                             placeholder="Tuliskan nama..." />
                     </div>
-                    <div class="flex gap-5">
-                        <button type="submit" name="action" value="complete" id="submit-button"
-                            class="w-[181px] h-[59px] bg-[#6F19DC] text-xl font-bold text-white rounded-xl border-white border"
-                            style="box-shadow: 2px 4px 6px 0 gray">Kirim</button>
-                        <button type="submit" name="action" value="draft" id="submit-button"
-                            class="w-[181px] h-[59px] bg-[#2BCB4E] text-xl font-bold text-white rounded-xl border-white border"
-                            style="box-shadow: 2px 4px 6px 0 gray">Simpan</button>
-                    </div>
-                </form>
-            </div>
+                </div>
+                <div class="flex gap-5">
+                    <button type="submit" name="action" value="complete" id="submit-button"
+                        class="w-[181px] h-[59px] bg-[#6F19DC] text-xl font-bold text-white rounded-xl border-white border"
+                        style="box-shadow: 2px 4px 6px 0 gray">Kirim</button>
+                    <button type="submit" name="action" value="draft" id="submit-button"
+                        class="w-[181px] h-[59px] bg-[#2BCB4E] text-xl font-bold text-white rounded-xl border-white border"
+                        style="box-shadow: 2px 4px 6px 0 gray">Simpan</button>
+                </div>
+            </form>
+        
         </div>
         <div class="flex flex-col gap-4 items-end">
             <div>
@@ -530,11 +547,21 @@
 
             const cariVal = document.getElementById('cari-input').value;
 
+            let jenjangVal = '';
+            
+            document.querySelectorAll('input[name="jenjang"]')
+            .forEach((radio) => {
+                if(radio.checked){
+                    jenjangVal = radio.value;
+                }
+            });
+
             const fetchData = async () => {
-                const res = await fetch(`/api/seragam?search=${cariVal}`)
+                const res = await fetch(`/api/seragam?search=${cariVal}&jenjang=${jenjangVal}`)
                 const data = await res.json()
                 const orders = data.orders;
 
+                console.log(jenjangVal)
                 document.getElementById('seragam-item').innerHTML = ""
 
                 return orders;

@@ -209,11 +209,21 @@ class UkurController extends Controller
       DB::commit();
 
       // return "Berhasil bikin order";
-      return back()->with('create-success', 'Berhasil bikin order');
+      switch ($request->input('action')) {
+        case 'complete':
+          return back()->with('create-success', 'Berhasil kirim');
+          break;
+        
+        case 'draft':
+          return back()->with('create-success', 'Berhasil simpan');
+          break;
+      }
+
+      
     } catch (Exception $e) {
       DB::rollBack();
 
-      return back()->with('create-error', 'Gagal bikin order ' . $e->getMessage());
+      return back()->with('create-error', 'Gagal bikin order, data kosong');
     }
   }
 

@@ -15,25 +15,99 @@
     <section class="flex justify-between py-10 px-[46px]">
         <div class="flex flex-col gap-5">
 
-            <div class="px-[46px]">
-                @if (session('create-success'))
-                    <p class="text-green-600">{{ session('create-success') }}</p>
-                @endif
-                @if (session('create-error'))
-                    <p class="text-red-600">{{ session('create-error') }}</p>
-                @endif
-
-                @if ($errors->any())
-                    <div class="bg-red-600 text-white">
-                        <ul>
-                            @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                    </div>
-                @endif
-            </div>
+        
             <div class="border rounded-xl border-black px-4 py-2" style="box-shadow: 2px 4px 6px rgb(177, 177, 177)">
+                <div class="px-[46px]">
+                    @if (session('create-success'))
+                        <script>
+                            window.addEventListener('load', function() {
+                                setTimeout(function() {
+                                    alert('{{ session('create-success') }}');
+                                }, 100); // Adjust the delay as needed
+                            });
+                        </script>
+                    @endif
+                    @if (session('create-error'))
+                        <script>
+                            window.addEventListener('load', function() {
+                                setTimeout(function() {
+                                    alert('{{ session('create-error') }}');
+                                }, 100); // Adjust the delay as needed
+                            });
+                        </script>
+                    @endif
+
+
+                    @if (session('update-success'))
+                        <script>
+                            window.addEventListener('load', function() {
+                                setTimeout(function() {
+                                    alert('{{ session('update-success') }}');
+                                }, 100); // Adjust the delay as needed
+                            });
+                        </script>
+                    @endif
+                    @if (session('update-error'))
+                        <script>
+                            window.addEventListener('load', function() {
+                                setTimeout(function() {
+                                    alert('{{ session('update-error') }}');
+                                }, 100); // Adjust the delay as needed
+                            });
+                        </script>
+                    @endif
+
+
+                    @if (session('delete-success'))
+                        <script>
+                            window.addEventListener('load', function() {
+                                setTimeout(function() {
+                                    alert('{{ session('delete-success') }}');
+                                }, 100); // Adjust the delay as needed
+                            });
+                        </script>
+                    @endif
+                    @if (session('delete-error'))
+                        <script>
+                            window.addEventListener('load', function() {
+                                setTimeout(function() {
+                                    alert('{{ session('delete-error') }}');
+                                }, 100); // Adjust the delay as needed
+                            });
+                        </script>
+                    @endif
+            
+                    @if ($errors->any())
+                        <script>
+                            window.addEventListener('load', function() {
+                                let errors = @json($errors->all());
+                                
+
+                                function capitalizeFirstLetter(string){
+                                    return string.charAt(0).toUpperCase() + string.slice(1);
+                                }
+
+                                let modifiedErrors = errors.map((error) => {
+                                    return error.replace(/The (.+?) field is required\./, function(match, p1){
+                                        return capitalizeFirstLetter(p1) + ' harus diisi'
+                                    });
+                                });
+
+                                let errorMessages = modifiedErrors.join('\n'); // Join all errors into a single string separated by new lines
+                                setTimeout(function() {
+                                    alert(errorMessages);
+                                }, 100);
+                            });
+                        </script>
+
+                        {{-- <script>
+                            document.querySelectorAll('.need-mandatory').innerHTML += `
+                                <span class="text-red-600">*</span>
+                            `
+                        </script> --}}
+                        
+                    @endif
+                </div>
                 <form id="create-and-edit-form" action="/gudang/seragam/bikin" class="flex flex-col gap-4" method="POST">
                     <div id="method-field">
 
@@ -152,11 +226,11 @@
                             <td id="nama-barang-{{ $seragam['id'] }}" class="px-4"
                                 rowspan="{{ count($seragam['semua_ukuran']) > 0 ? count($seragam['semua_ukuran']) + 1 : 1 }}">
                                 {{ $seragam['nama_barang'] }}</td>
-                            <td id="ukuran-{{ $seragam['id'] }}" class="px-4">{{ $seragam['ukuran'] }}</td>
+                            <td id="ukuran-{{ $seragam['id'] }}" class="px-4" align="center">{{ $seragam['ukuran'] }}</td>
                             <td id="jenjang-{{ $seragam['id'] }}" class="hidden">{{ $seragam['jenjang'] }}</td>
                             <td id="jenis-kelamin-{{ $seragam['id'] }}" class="hidden">{{ $seragam['jenis_kelamin'] }}
                             </td>
-                            <td id="stok-{{ $seragam['id'] }}" class="px-4">{{ $seragam['stok'] }}</td>
+                            <td id="stok-{{ $seragam['id'] }}" class="px-4" align="center">{{ $seragam['stok'] }}</td>
                             <td id="harga-{{ $seragam['id'] }}" class="px-4">{{ $seragam['harga'] }}</td>
                             <td class="px-4 ">
                                 <div class="flex gap-2">
@@ -182,12 +256,12 @@
                                 <tr data-seragam="{{ $ukuran['id'] }}" class="seragam-row divide-x-2 divide-black">
                                     <td id="nama-barang-{{ $ukuran['id'] }}" class="hidden">{{ $ukuran['nama_barang'] }}
                                     </td>
-                                    <td id="ukuran-{{ $ukuran['id'] }}" class="px-4 border-2 border-black">
+                                    <td id="ukuran-{{ $ukuran['id'] }}" class="px-4 border-2 border-black" align="center">
                                         {{ $ukuran['ukuran'] }}</td>
                                     <td id="jenjang-{{ $ukuran['id'] }}" class="hidden">{{ $ukuran['jenjang'] }}</td>
                                     <td id="jenis-kelamin-{{ $ukuran['id'] }}" class="hidden">
                                         {{ $ukuran['jenis_kelamin'] }}</td>
-                                    <td id="stok-{{ $ukuran['id'] }}" class="px-4">{{ $ukuran['stok'] }}</td>
+                                    <td id="stok-{{ $ukuran['id'] }}" class="px-4" align="center">{{ $ukuran['stok'] }}</td>
                                     <td id="harga-{{ $ukuran['id'] }}" class="px-4">{{ $ukuran['harga'] }}</td>
                                     <td class="px-4">
                                         <div class="flex gap-2">
@@ -226,9 +300,45 @@
         const smp = document.getElementById("smp");
         const sma = document.getElementById("sma");
         const smk = document.getElementById("smk");
-
         const cowo = document.getElementById("cowo");
         const cewe = document.getElementById("cewe");
+
+        const jenjang = document.querySelectorAll('input[name="jenjang[]"]');
+        const jenkel = document.querySelectorAll('input[name="jenis_kelamin[]"]')
+
+        submitButton.addEventListener('click', function(e){
+            let jenjangCheck = false;
+
+            jenjang.forEach( (checkbox) => {
+                if(checkbox.checked){
+                    jenjangCheck = true;
+                }
+            });
+
+            let jenkelCheck = false;
+
+            jenkel.forEach( (checkbox) => {
+                if(checkbox.checked){
+                    jenkelCheck = true;
+                }
+            });
+
+            if(!jenjangCheck && !jenkelCheck){
+                alert('Dimohon untuk mengisi Jenjang dan Jenis Kelamin');
+                e.preventDefault();
+            } else
+            if(!jenjangCheck){
+                alert('Tolong pilih setidaknya satu jenjang');
+                e.preventDefault();
+            } else
+            if(!jenkelCheck){
+                alert('Jenis kelamin belum dipilih')
+                e.preventDefault();
+            }
+
+            
+        });
+        
 
         document.querySelectorAll(".seragam-row").forEach(function(row) {
 

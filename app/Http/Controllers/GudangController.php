@@ -223,6 +223,7 @@ class GudangController extends Controller
   public function inputBikinSeragam(Request $request)
   {
     // TODO: Validasi data
+  
     $validatedData = $request->validate([
       'jenjang.*' => 'required|in:sd,smp,sma,smk',
       'jenis_kelamin.*' => 'required|in:cowo,cewe',
@@ -231,6 +232,9 @@ class GudangController extends Controller
       'stok' => 'required|numeric|min:0',
       'harga' => 'required|numeric|min:1000'
     ]);
+
+    
+  
 
     try {
       // TODO: Create logic
@@ -284,9 +288,9 @@ class GudangController extends Controller
       $validatedData['jenis_kelamin'] = implode(',', $validatedData['jenis_kelamin']);
 
       Seragam::where('id', $id)->update($validatedData);
-      return back()->with('update-success', 'berhasil update');
+      return back()->with('update-success', 'Berhasil update');
     } catch (Exception $e) {
-      return back()->with('update-error', 'gagal update');
+      return back()->with('update-error', 'Gagal update');
     }
   }
   public function deleteSeragam($id)
@@ -295,9 +299,9 @@ class GudangController extends Controller
       DB::table('seragams')
         ->where('id', $id)->delete();
 
-      return back()->with('delete-success', 'berhasil delete');
+      return back()->with('delete-success', 'Berhasil delete');
     } catch (Exception $e) {
-      return back()->with('delete-error', 'gagal delete');
+      return back()->with('delete-error', 'Gagal delete');
     }
   }
 }
