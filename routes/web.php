@@ -64,6 +64,7 @@ Route::controller(UkurController::class)
     Route::post('/bikin', 'inputBikinOrder')->can('create-ukur');
     Route::patch('/update/{id}', 'updateOrder')->can('update-ukur');
     Route::delete('/delete/{id}', 'deleteOrder')->can('delete-ukur');
+    Route::post('/confirm/{id}', 'confirmOrder')->can('update-ukur');
   });
 
 Route::controller(LaporanController::class)
