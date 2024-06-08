@@ -15,6 +15,7 @@
             <select class="select-condition font-bold text-3xl focus:outline-none bg-transparent" name="status">
                 <option class="text-base" value="on-process" {{ request()->query('status') === 'on-process'? 'selected' : ''}}>On-Process</option>
                 <option class="text-base" value="draft" {{ request()->query('status') === 'draft'? 'selected' : ''}}>Draft</option>
+                <option class="text-base" value="siap" {{ request()->query('status') === 'siap'? 'selected' : ''}}>Siap</option>
                 <option class="text-base" value="selesai" {{ request()->query('status') === 'selesai'? 'selected' : ''}}>Selesai</option>
             </select>
         </form>

@@ -19,6 +19,9 @@
                 <option class="text-base" value="draft" {{ request()->query('status') === 'draft' ? 'selected' : '' }}>
                     Draft
                 </option>
+                <option class="text-base" value="siap" {{ request()->query('status') === 'siap' ? 'selected' : '' }}>
+                    Siap
+                </option>
                 <option class="text-base" value="selesai" {{ request()->query('status') === 'selesai' ? 'selected' : '' }}>
                     Selesai</option>
             </select>
@@ -57,11 +60,13 @@
                                 Order</a> <span>|</span>
                             <a href="/ukur/{{ $order->nomor_urut }}" class="text-sky-600 hover:underline">Lihat Order</a>
                             <span>|</span>
-                            <form action="/ukur/confirm/{{ $order->id }}" method="post">
-                                @method('POST')
-                                @csrf
-                                <button class="text-green-600 hover:underline" onclick="return confirm('Apakah orderan sudah selesai?')">Orderan Selesai</button>
-                            </form> <span>|</span>
+                            @if (request()->query('status') === 'siap')
+                                <form action="/ukur/confirm/{{ $order->id }}" method="post">
+                                    @method('POST')
+                                    @csrf
+                                    <button class="text-green-600 hover:underline" onclick="return confirm('Apakah orderan sudah selesai?')">Orderan Selesai</button>
+                                </form> <span>|</span>
+                            @endif
                             <form action="/ukur/delete/{{ $order->id }}" method="post">
                                 @method('DELETE')
                                 @csrf
