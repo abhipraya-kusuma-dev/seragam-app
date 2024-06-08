@@ -189,6 +189,7 @@ class GudangController extends Controller
   public function inputBikinSeragam(Request $request)
   {
     // TODO: Validasi data
+  
     $validatedData = $request->validate([
       'jenjang.*' => 'required|in:sd,smp,sma,smk',
       'jenis_kelamin.*' => 'required|in:cowo,cewe',
@@ -197,6 +198,9 @@ class GudangController extends Controller
       'stok' => 'required|numeric|min:0',
       'harga' => 'required|numeric|min:1000'
     ]);
+
+    
+  
 
     try {
       // TODO: Create logic

@@ -114,7 +114,6 @@
                     return;
                 }
             }
-
             
                 document.getElementById('seragam-item').innerHTML += `<div class=" h-max border-2 border border-black rounded-xl relative">
                     <div class="px-5 py-3 flex flex-col gap-3">
@@ -252,7 +251,7 @@
         }
 
         const generateInput = (list) => {
-            const hiddenInput = document.getElementById('hiddenInput');
+            const hiddenInput = document.getElementById('hidden-input');
 
             list.forEach(order => {
                 hiddenInput.innerHTML += `
@@ -375,13 +374,27 @@
         @endif
 
         @if ($errors->any())
-            <div class="bg-red-600 text-white">
-                <ul>
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
+        <script>
+            window.addEventListener('load', function() {
+                let errors = @json($errors->all());
+                
+
+                function capitalizeFirstLetter(string){
+                    return string.charAt(0).toUpperCase() + string.slice(1);
+                }
+
+                let modifiedErrors = errors.map((error) => {
+                    return error.replace(/The (.+?) field is required\./, function(match, p1){
+                        return capitalizeFirstLetter(p1) + ' harus diisi'
+                    });
+                });
+
+                let errorMessages = modifiedErrors.join('\n'); // Join all errors into a single string separated by new lines
+                setTimeout(function() {
+                    alert(errorMessages);
+                }, 100);
+            });
+        </script>
         @endif
     </div>
 
@@ -462,12 +475,9 @@
 
             </div>
             <div class="flex gap-5">
-                <button type="submit" name="action" value="complete" id="submit-button"
-                    class="w-[181px] h-[59px] bg-[#6F19DC] text-xl font-bold text-white rounded-xl border-white border"
-                    style="box-shadow: 2px 4px 6px 0 gray">Kirim</button>
-                <button type="submit" name="action" value="draft" id="submit-button"
+                <button type="submit" name="action" id="submit-button"
                     class="w-[181px] h-[59px] bg-[#2BCB4E] text-xl font-bold text-white rounded-xl border-white border"
-                    style="box-shadow: 2px 4px 6px 0 gray">Simpan</button>
+                    style="box-shadow: 2px 4px 6px 0 gray">Update</button>
             </div>
             </form>
         </div>
