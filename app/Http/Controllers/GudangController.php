@@ -43,7 +43,8 @@ class GudangController extends Controller
     }
 
     return view('gudang.daftar-order', [
-      'orders' => $orders
+      'orders' => $orders,
+      'title' => 'Gudang | Daftar Order'
     ]);
   }
 
@@ -64,7 +65,8 @@ class GudangController extends Controller
 
     return view('gudang.order-detail', [
       'nomor_urut' => $nomor_urut,
-      'order' => $order
+      'order' => $order,
+      'title' => 'Gudang | Order Detail'
     ]);
   }
 
@@ -114,23 +116,52 @@ class GudangController extends Controller
 
       DB::commit();
 
-      return back()->with('update-success', 'Berhasil mengubah data order!');
+      /*return back()->with('update-success', 'Berhasil mengubah data order!');*/
+      return redirect('/gudang/order/')->with('update-success', 'Berhasil mengubah data order!');
     } catch (Exception $e) {
       DB::rollBack();
       return back()->with('update-error', $e->getMessage());
     }
   }
 
-  public function daftarSeragam()
+  public function daftarSeragam(Request $request)
   {
+    $namaBarang = $request->query('nama_barang');
+    $namaUkuran = $request->query('ukuran');
+    $harga = $request->query('harga');
+    $stok = $request->query('stok');
+
+    $orderByNamaBarang = $request->query('orderBy', 'asc');
+    $orderByTanggalOrder = $request->query('orderByTanggalOrder', 'asc');
+    $orderByStok = $request->query('orderByStok', 'asc');
+    $orderByHarga = $request->query('orderByHarga', 'asc');
+    $orderByUkuran = $request->query('orderByUkuran', 'asc');
+
     $seragams = DB::table('seragams')
-      ->select('id', 'nama_barang', 'jenjang', 'jenis_kelamin', 'ukuran', 'stok', 'harga')
+      ->select('id', 'nama_barang', 'jenjang', 'jenis_kelamin', 'ukuran', 'stok', 'harga', 'created_at')
+      ->when($namaBarang, function (Builder $builder) use ($namaBarang) {
+        return $builder->where('nama_barang', 'LIKE', "%$namaBarang%");
+      })
+      ->when($namaUkuran, function (Builder $builder) use ($namaUkuran) {
+        return $builder->where('ukuran', $namaUkuran);
+      })
+      ->when($harga, function (Builder $builder) use ($harga) {
+        return $builder->where('harga', 'LIKE', "%$harga%");
+      })
+      ->when($stok, function (Builder $builder) use ($stok) {
+        return $builder->where('stok', $stok);
+      })
+      ->orderBy('created_at', $orderByTanggalOrder)
+      ->orderBy('stok', $orderByStok)
+      ->orderBy('harga', $orderByHarga)
+      ->orderBy('ukuran', $orderByUkuran)
+      ->orderBy('nama_barang', $orderByNamaBarang)
       ->get();
 
     $data = [];
     $pointer = 0;
 
-    $list_ukuran_fix = ['S', 'M', 'L', 'XL', 'XXL', 'XXXL', 'XXXXL', 'XXXXXL', '11', '13', '15', '17', '19', '21', '23', '25', '27', '29', '31', '33', '35', '37', '39', '41'];
+    $list_ukuran_fix = ['S', 'M', 'L', 'XL', 'XXL', 'XXXL', 'XXXXL', 'XXXXXL', '11', '13', '15', '17', '19', '21', '23', '25', '27', '29', '31', '33', '35', '37', '39', '41', 'universal'];
 
     while ($seragams->count() > $pointer) {
       $isExists = false;
@@ -151,21 +182,23 @@ class GudangController extends Controller
         continue;
       };
 
+      $new_seragam = $seragams[$pointer];
+
       // If $seragams[$pointer]->nama_barang is completely new and didn't exists in $data array, then
       $data[] = [
-        'id' => $seragams[$pointer]->id,
-        'nama_barang' => $seragams[$pointer]->nama_barang,
-        'jenjang' => $seragams[$pointer]->jenjang,
-        'jenis_kelamin' => $seragams[$pointer]->jenis_kelamin,
-        'ukuran' => $seragams[$pointer]->ukuran,
-        'stok' => $seragams[$pointer]->stok,
-        'harga' => StringHelper::hargaIntToRupiah($seragams[$pointer]->harga),
+        'id' => $new_seragam->id,
+        'nama_barang' => $new_seragam->nama_barang,
+        'jenjang' => $new_seragam->jenjang,
+        'jenis_kelamin' => $new_seragam->jenis_kelamin,
+        'ukuran' => $new_seragam->ukuran,
+        'stok' => $new_seragam->stok,
+        'harga' => StringHelper::hargaIntToRupiah($new_seragam->harga),
         'semua_ukuran' => [],
       ];
 
       foreach ($seragams as $seragam) {
-        if ($seragams[$pointer]->nama_barang === $seragam->nama_barang && $seragams[$pointer]->id !== $seragam->id) {
-          $data[$pointer]['semua_ukuran'][] = [
+        if ($new_seragam->nama_barang === $seragam->nama_barang && $new_seragam->id !== $seragam->id) {
+          $data[count($data) - 1]['semua_ukuran'][] = [
             'id' => $seragam->id,
             'nama_barang' => $seragam->nama_barang,
             'jenjang' => $seragam->jenjang,
@@ -182,7 +215,8 @@ class GudangController extends Controller
 
     return view('gudang.daftar-seragam', [
       'data' => $data,
-      'list_ukuran_fix' => $list_ukuran_fix
+      'list_ukuran_fix' => $list_ukuran_fix,
+      'title' => 'Gudang | Daftar Seragam'
     ]);
   }
 
@@ -211,9 +245,9 @@ class GudangController extends Controller
       $seragam = Seragam::where('nama_barang', $validatedData['nama_barang'])->first();
 
       if ($seragam) {
-        $isSameJenjang = $seragam->jenjang && $validatedData['jenjang'];
-        $isSameJenisKelamin = $seragam->jenis_kelamin && $validatedData['jenis_kelamin'];
-        $isSameUkuran = $seragam->ukuran && $validatedData['ukuran'];
+        $isSameJenjang = $seragam->jenjang === $validatedData['jenjang'];
+        $isSameJenisKelamin = $seragam->jenis_kelamin === $validatedData['jenis_kelamin'];
+        $isSameUkuran = $seragam->ukuran === $validatedData['ukuran'];
 
         $isDuplicateData = $isSameJenjang && $isSameJenisKelamin && $isSameUkuran;
 
@@ -254,9 +288,9 @@ class GudangController extends Controller
       $validatedData['jenis_kelamin'] = implode(',', $validatedData['jenis_kelamin']);
 
       Seragam::where('id', $id)->update($validatedData);
-      return back()->with('update-success', 'berhasil update');
+      return back()->with('update-success', 'Berhasil update');
     } catch (Exception $e) {
-      return back()->with('update-error', 'gagal update');
+      return back()->with('update-error', 'Gagal update');
     }
   }
   public function deleteSeragam($id)
@@ -265,9 +299,9 @@ class GudangController extends Controller
       DB::table('seragams')
         ->where('id', $id)->delete();
 
-      return back()->with('delete-success', 'berhasil delete');
+      return back()->with('delete-success', 'Berhasil delete');
     } catch (Exception $e) {
-      return back()->with('delete-error', 'gagal delete');
+      return back()->with('delete-error', 'Gagal delete');
     }
   }
 }

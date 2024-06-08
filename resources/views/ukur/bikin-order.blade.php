@@ -403,23 +403,26 @@
     <section class="flex justify-between py-10 px-[46px]">
 
         <div class="flex flex-col gap-5">
-            <div class="border rounded-xl border-black px-4 py-2" style="box-shadow: 2px 4px 6px rgb(177, 177, 177)">
-                <form id="create-and-edit-form" action="/ukur/bikin" class="flex flex-col gap-4" method="POST">
-                    @csrf
-                        <div>
-                            <h1 class="font-bold">Nomor Urut</h1>
-                            <input class="font-semibold bg-transparent cursor-not-allowed pointer-events-none"
-                                id="order-nomor-urut" name="nomor_urut" value="{{ $nomorOrderTerakhir }}" />
-                        </div>
-                        <h1 class="font-bold">Jenjang</h1>
-                        <div class="flex items-center gap-4">
-                            <label for="sd"
-                                class="has-[:checked]:border-2 has-[:checked]:border-[#FF5656] has-[:checked]:bg-white has-[:checked]:text-[#FF5656] border-2 border-transparent select-none text-center rounded-[8px] py-1 px-8 bg-[#FF5656] text-white font-semibold"
-                                style="box-shadow: 2px 4px 5px rgb(177, 177, 177)">
-                                SD
-                                <input tabindex="1" type="radio" name="jenjang" id="sd" value="sd"
-                                    class="hidden" />
-                            </label>
+            <form id="create-and-edit-form" action="/ukur/bikin" class="flex flex-col gap-4" method="POST">
+                @csrf
+                <div class="border rounded-xl border-black px-4 py-2 flex flex-col gap-4" style="box-shadow: 2px 4px 6px rgb(177, 177, 177)">
+                    <div id="hidden-input" class="hidden">
+
+                    </div>
+                    <div>
+                        <h1 class="font-bold">Nomor Urut</h1>
+                        <input class="font-semibold bg-transparent cursor-not-allowed pointer-events-none"
+                            id="order-nomor-urut" name="nomor_urut" value="{{ $nomorOrderTerakhir }}" />
+                    </div>
+                    <h1 class="font-bold">Jenjang</h1>
+                    <div class="flex items-center gap-4">
+                        <label for="sd"
+                            class="has-[:checked]:border-2 has-[:checked]:border-[#FF5656] has-[:checked]:bg-white has-[:checked]:text-[#FF5656] border-2 border-transparent select-none text-center rounded-[8px] py-1 px-8 bg-[#FF5656] text-white font-semibold"
+                            style="box-shadow: 2px 4px 5px rgb(177, 177, 177)">
+                            SD
+                            <input tabindex="1" type="radio" name="jenjang" id="sd" value="sd"
+                                class="hidden" />
+                        </label>
 
                             <label for="smp"
                                 class="has-[:checked]:border-2 has-[:checked]:border-[#3485FF] has-[:checked]:bg-white has-[:checked]:text-[#3485FF] border-2 border-transparent select-none text-center rounded-[8px] py-1 px-7 bg-[#3485FF] text-white font-semibold"
@@ -452,32 +455,30 @@
                                 <input type="radio" name="jenis_kelamin" id="cowo" value="cowo" class="hidden" />
                             </label>
 
-                            <label for="cewe"
-                                class="has-[:checked]:border-2 has-[:checked]:border-[#FF34C6] has-[:checked]:bg-white has-[:checked]:text-[#FF34C6] border-2 border-2 border-transparent select-none rounded-[8px] py-1 px-5 bg-[#FF34C6] text-white font-semibold"
-                                style="box-shadow: 2px 4px 5px rgb(177, 177, 177)">
-                                Wanita
-                                <input type="radio" name="jenis_kelamin" id="cewe" value="cewe" class="hidden" />
-                            </label>
-                        </div>
-                        <div>
-                            <label for="nama_lengkap" class="font-bold">Nama Lengkap</label><br>
-                            <input list="list_nama_barang" id="nama_lengkap" name="nama_lengkap"
-                                class="outline-none border rounded border-black px-2 font-bold mt-2 mb-2"
-                                placeholder="Tuliskan nama..." />
-                        </div>
-                        </div>
-                        <div id="hidden-input" class="hidden">
-
-                        </div>
-                        <div class="flex gap-5">
-                            <button type="submit" name="action" value="complete" id="submit-button"
-                                class="w-[181px] h-[59px] bg-[#6F19DC] text-xl font-bold text-white rounded-xl border-white border"
-                                style="box-shadow: 2px 4px 6px 0 gray">Kirim</button>
-                            <button type="submit" name="action" value="draft" id="submit-button"
-                                class="w-[181px] h-[59px] bg-[#2BCB4E] text-xl font-bold text-white rounded-xl border-white border"
-                                style="box-shadow: 2px 4px 6px 0 gray">Simpan</button>
-                        </div>
+                        <label for="cewe"
+                            class="has-[:checked]:border-2 has-[:checked]:border-[#FF34C6] has-[:checked]:bg-white has-[:checked]:text-[#FF34C6] border-2 border-2 border-transparent select-none rounded-[8px] py-1 px-5 bg-[#FF34C6] text-white font-semibold"
+                            style="box-shadow: 2px 4px 5px rgb(177, 177, 177)">
+                            Wanita
+                            <input type="radio" name="jenis_kelamin" id="cewe" value="cewe" class="hidden" />
+                        </label>
+                    </div>
+                    <div>
+                        <label for="nama_lengkap" class="font-bold">Nama Lengkap</label><br>
+                        <input list="list_nama_barang" id="nama_lengkap" name="nama_lengkap"
+                            class="outline-none border rounded border-black px-2 font-bold mt-2 mb-2"
+                            placeholder="Tuliskan nama..." />
+                    </div>
+                </div>
+                <div class="flex gap-5">
+                    <button type="submit" name="action" value="complete" id="submit-button"
+                        class="w-[181px] h-[59px] bg-[#6F19DC] text-xl font-bold text-white rounded-xl border-white border"
+                        style="box-shadow: 2px 4px 6px 0 gray">Kirim</button>
+                    <button type="submit" name="action" value="draft" id="submit-button"
+                        class="w-[181px] h-[59px] bg-[#2BCB4E] text-xl font-bold text-white rounded-xl border-white border"
+                        style="box-shadow: 2px 4px 6px 0 gray">Simpan</button>
+                </div>
             </form>
+        
         </div>
         <div class="flex flex-col gap-4 items-end">
             <div>
@@ -500,8 +501,6 @@
                     </tbody>
                 </table>
             </div>
-
-
         </div>
     </section>
 

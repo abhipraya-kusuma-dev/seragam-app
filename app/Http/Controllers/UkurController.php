@@ -17,10 +17,14 @@ class UkurController extends Controller
   public function cariSeragam(Request $request)
   {
     $search = $request->query('search');
+    $jenjang = $request->query('jenjang');
 
     $seragams = DB::table('seragams')
-      ->whereRaw('LOWER(nama_barang) LIKE ?', ["%$search%"])
       ->select('id', 'nama_barang', 'jenjang', 'jenis_kelamin', 'ukuran', 'stok', 'harga')
+      ->whereRaw('LOWER(nama_barang) LIKE ?', ["%$search%"])
+      ->when($jenjang, function (Builder $builder) use ($jenjang) {
+        return $builder->where('jenjang', 'LIKE', "%$jenjang%");
+      })
       ->get();
 
     $data = [];
@@ -59,7 +63,7 @@ class UkurController extends Controller
 
       foreach ($seragams as $seragam) {
         if ($seragams[$pointer]->nama_barang === $seragam->nama_barang && $seragams[$pointer]->id !== $seragam->id) {
-          $data[$pointer]['semua_ukuran'][] = [
+          $data[count($data) - 1]['semua_ukuran'][] = [
             'id' => $seragam->id,
             'nama_barang' => $seragam->nama_barang,
             'jenjang' => $seragam->jenjang,
@@ -75,7 +79,7 @@ class UkurController extends Controller
     }
 
     return response()->json([
-      'orders' => $data
+      'orders' => $data,
     ], 200);
   }
 
@@ -103,7 +107,8 @@ class UkurController extends Controller
     }
 
     return view('ukur.daftar-order', [
-      'orders' => $orders
+      'orders' => $orders,
+      'title' => 'Ukur | Daftar Order'
     ]);
   }
 
@@ -125,13 +130,14 @@ class UkurController extends Controller
 
     return view('ukur.order-detail', [
       'nomor_urut' => $nomor_urut,
-      'order' => $order
+      'order' => $order,
+      'title' => 'Ukur | Order Detail'
     ]);
   }
 
   public function bikinOrder()
   {
-    $lastOrder = Order::orderBy('nomor_urut', 'desc')->first();
+    $lastOrder = Order::orderBy('id', 'desc')->first();
     $lastOrderNum = (int) substr($lastOrder->nomor_urut, 1);
 
     $lastOrderNum += 1;
@@ -139,7 +145,8 @@ class UkurController extends Controller
     $latestOrderNum = str_pad($lastOrderNum, 4, '0', STR_PAD_LEFT);
 
     return view('ukur.bikin-order', [
-      'nomorOrderTerakhir' => $latestOrderNum
+      'nomorOrderTerakhir' => $latestOrderNum,
+      'title' => 'Ukur | Bikin Order'
     ]);
   }
 
@@ -155,9 +162,15 @@ class UkurController extends Controller
       'qty.*' => 'required|numeric|min:1'
     ]);
 
+
     try {
       // TODO: logic bikin order baru
       DB::beginTransaction();
+
+      $stokMinimum = DB::table('seragams')
+        ->whereIn('id', $validatedData['seragam_id'])
+        ->where('stok', '>', 0)
+        ->get();
 
       switch ($request->input('action')) {
         case 'complete':
@@ -166,7 +179,7 @@ class UkurController extends Controller
             'nomor_urut' => $validatedData['nomor_urut'],
             'nama_lengkap' => $validatedData['nama_lengkap'],
             'jenis_kelamin' => $validatedData['jenis_kelamin'],
-            'status' => 'on-process',
+            'status' => $stokMinimum->isEmpty() ? 'draft' : 'on-process',
           ]);
 
           break;
@@ -196,7 +209,17 @@ class UkurController extends Controller
       DB::commit();
 
       // return "Berhasil bikin order";
-      return back()->with('create-success', 'Berhasil bikin order');
+      switch ($request->input('action')) {
+        case 'complete':
+          return back()->with('create-success', 'Berhasil kirim');
+          break;
+        
+        case 'draft':
+          return back()->with('create-success', 'Berhasil simpan');
+          break;
+      }
+
+      
     } catch (Exception $e) {
       DB::rollBack();
 
@@ -215,7 +238,7 @@ class UkurController extends Controller
     $semua_seragam = DB::table('statuses')
       ->join('seragams', 'seragams.id', 'statuses.seragam_id')
       ->where('statuses.order_id', $order->id)
-      ->select('seragams.id', 'seragams.nama_barang', 'seragams.ukuran', 'seragams.harga', 'statuses.kuantitas as QTY')
+      ->select('seragams.id', 'seragams.nama_barang', 'seragams.ukuran', 'seragams.harga', 'seragams.stok', 'statuses.kuantitas as QTY')
       ->get();
 
     foreach ($semua_seragam as $seragam) {
@@ -230,7 +253,8 @@ class UkurController extends Controller
 
     return view('ukur.edit-order', [
       'order' => $order,
-      'nomorOrderTerakhir' => $latestOrderNum
+      'nomorOrderTerakhir' => $latestOrderNum,
+      'title' => 'Ukur | Edit Order'
     ]);
   }
 
@@ -245,7 +269,6 @@ class UkurController extends Controller
       'seragam_id.*' => 'required|numeric|exists:seragams,id',
       'qty.*' => 'required|numeric|min:1'
     ]);
-
 
     try {
       // TODO: logic update order
@@ -280,7 +303,8 @@ class UkurController extends Controller
       DB::commit();
 
       // return 'Berhasil update order';
-      return back()->with('update-success', 'Berhasil update order');
+      /*return back()->with('update-success', 'Berhasil update order');*/
+      return redirect('/ukur/bikin')->with('update-success', 'Berhasil update order');
     } catch (Exception $e) {
       DB::rollBack();
       return 'Gagal update order' . $e->getMessage();

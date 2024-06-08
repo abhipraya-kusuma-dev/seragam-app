@@ -14,6 +14,8 @@
     </div>
     <section class="flex justify-between py-10 px-[46px]">
         <div class="flex flex-col gap-5">
+
+        
             <div class="border rounded-xl border-black px-4 py-2" style="box-shadow: 2px 4px 6px rgb(177, 177, 177)">
                 <div class="px-[46px]">
                     @if (session('create-success'))
@@ -34,16 +36,48 @@
                             });
                         </script>
                     @endif
+
+
+                    @if (session('update-success'))
+                        <script>
+                            window.addEventListener('load', function() {
+                                setTimeout(function() {
+                                    alert('{{ session('update-success') }}');
+                                }, 100); // Adjust the delay as needed
+                            });
+                        </script>
+                    @endif
+                    @if (session('update-error'))
+                        <script>
+                            window.addEventListener('load', function() {
+                                setTimeout(function() {
+                                    alert('{{ session('update-error') }}');
+                                }, 100); // Adjust the delay as needed
+                            });
+                        </script>
+                    @endif
+
+
+                    @if (session('delete-success'))
+                        <script>
+                            window.addEventListener('load', function() {
+                                setTimeout(function() {
+                                    alert('{{ session('delete-success') }}');
+                                }, 100); // Adjust the delay as needed
+                            });
+                        </script>
+                    @endif
+                    @if (session('delete-error'))
+                        <script>
+                            window.addEventListener('load', function() {
+                                setTimeout(function() {
+                                    alert('{{ session('delete-error') }}');
+                                }, 100); // Adjust the delay as needed
+                            });
+                        </script>
+                    @endif
             
                     @if ($errors->any())
-                        {{-- <div class="bg-red-600 text-white">
-                            <ul>
-                                @foreach ($errors->all() as $error)
-                                    <li>{{ $error }}</li>
-                                @endforeach
-                            </ul>
-                        </div> --}}
-
                         <script>
                             window.addEventListener('load', function() {
                                 let errors = @json($errors->all());
@@ -158,8 +192,8 @@
                     <div class="flex gap-4">
                         <div>
                             <label for="harga" class="font-bold">Harga</label><br>
-                            <input id="harga" name="harga" class="outline-none border rounded border-black mb-3 px-2 w-57"
-                                type="number" />
+                            <input id="harga" name="harga"
+                                class="outline-none border rounded border-black mb-3 px-2 w-57" type="number" />
                         </div>
                     </div>
 
@@ -337,7 +371,7 @@
                 document.querySelector("input[name='stok']").value = getVal(`#stok-${seragamId}`).trim()
                 const hargaVal = getVal(`#harga-${seragamId}`).slice(3).split('.').join('');
                 document.querySelector("input[name='harga']").value = parseInt(hargaVal)
-                
+
 
                 sd.checked = false
                 smp.checked = false
