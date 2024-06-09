@@ -10,6 +10,11 @@
             <a class=" py-2 px-8  bg-[#6675F7]/80 text-white/60 font-semibold rounded-b-lg border-black border hover:text-white hover:bg-[#6675F7] transition duration-500"
                 href="/gudang/order">List
                 Order</a>
+            <a class=" py-2 px-8  bg-[#6F19DC]/80 text-white/60 font-semibold rounded-b-lg border-black border hover:text-white hover:bg-[#6F19DC] transition duration-500"
+                href="/laporan/lihat-stok">Laporan Stok</a>
+            <a class=" py-2 px-8  bg-[#FF6FE8]/80 text-white/60 font-semibold rounded-b-lg border-black border hover:text-white hover:bg-[#FF6FE8] transition duration-500"
+                href="/laporan/lihat">Laporan Keuangan</a>
+                <marquee class="select-none w-[495px]">Pekerjaan seberat apapun akan lebih terasa ringan jika kita tidak mengerjakannya🤗🤗</marquee>
         </div>
     </div>
     <section class="flex justify-between py-10 px-[46px]">
@@ -289,7 +294,9 @@
                 </tbody>
             </table>
         </div>
+        
     </section>
+    
 
     <script>
         const methodField = document.getElementById("method-field");
@@ -431,4 +438,5 @@
 
         })
     </script>
+    
 @endsection

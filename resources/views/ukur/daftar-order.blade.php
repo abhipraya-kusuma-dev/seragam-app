@@ -9,6 +9,7 @@
             </a>
             <a class=" py-4 px-8  bg-[#6675F7] text-white font-semibold rounded-b-lg border-black border" href="">List
                 Order</a>
+            <marquee class="select-none w-[495px]">Cantik itu relatif, tergantung letak kamera dan intensitas cahaya..🤗🤗</marquee>
         </div>
     </div>
     <div class="content-container px-[76px] w-full mt-[92px] mb-4 flex justify-between">

@@ -286,9 +286,9 @@
 
             console.log(orderItemList);
 
-
         }
     </script>
+    
     <x-navbar />
     <div class="flex justify-center">
         <div id="popupContainer"
@@ -352,6 +352,7 @@
             <a class=" py-2 px-8  bg-[#6675F7]/80 text-white/60 font-semibold rounded-b-lg border-black border hover:text-white hover:bg-[#6675F7] transition duration-500"
                 href="/ukur/order">List
                 Order</a>
+            <marquee class="select-none w-[495px]">Cantik itu relatif, tergantung letak kamera dan intensitas cahaya..🤗🤗</marquee>
         </div>
     </div>
 
@@ -549,8 +550,7 @@
 
             let jenjangVal = '';
             
-            document.querySelectorAll('input[name="jenjang"]')
-            .forEach((radio) => {
+            document.querySelectorAll('input[name="jenjang"]').forEach((radio) => {
                 if(radio.checked){
                     jenjangVal = radio.value;
                 }

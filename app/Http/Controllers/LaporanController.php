@@ -47,7 +47,8 @@ class LaporanController extends Controller
     $orders = $orders->unique('nama_barang');
 
     return view('laporan.stok', [
-      'orders' => $orders
+      'orders' => $orders,
+      'title' => 'Laporan | Stok'
     ]);
   }
 

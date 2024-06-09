@@ -70,7 +70,7 @@ Route::controller(LaporanController::class)
   ->middleware('auth')
   ->prefix('laporan')
   ->group(function () {
-    Route::get('/lihat', 'lihatOrderan');
+    Route::get('/lihat-stok', 'lihatOrderan');
     Route::get('/export', 'export');
   });
 

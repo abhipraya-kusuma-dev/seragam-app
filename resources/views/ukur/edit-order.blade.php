@@ -351,6 +351,7 @@
             </a>
             <a class=" py-4 px-4 bg-[#6F19DC] text-white font-semibold rounded-b-lg border-black border" href="">Edit
                 Orderan</a>
+            <marquee class="select-none w-[495px]">Cantik itu relatif, tergantung letak kamera dan intensitas cahaya..🤗🤗</marquee>
         </div>
     </div>
 
