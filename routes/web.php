@@ -73,5 +73,6 @@ Route::controller(LaporanController::class)
   ->group(function () {
     Route::get('/lihat', 'lihatOrderan');
     Route::get('/export', 'export');
+    Route::get('/keuangan', 'lihatKeuangan');
   });
 
