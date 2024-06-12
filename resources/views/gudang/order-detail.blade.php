@@ -62,21 +62,20 @@
                             </thead>
                             <tbody>
                                 @foreach($order->seragams as $seragam)
-                                
                                     <tr data-seragam='{{ $seragam->id }}' class='label-seragam divide-x divide-gray-400  border-gray-400 border {{ $seragam->tersedia? 'bg-green-300':'bg-red-300' }}'>                                        
                                             <td class="py-3 px-2 text-left">{{ $seragam->nama_barang }}</td>
                                             <td class="py-3 px-2 text-left">{{ $seragam->ukuran }}</td>
                                             <td class="py-3 px-2 text-left">{{ $seragam->kuantitas }}</td>
                                             <td class="py-3 tersedia-status px-2 text-left">{{ $seragam->tersedia? 'Sudah' : 'Belum' }}</td>
                                     </tr>
-                                <input class="seragam-input hidden" type="checkbox" name="seragam_ids[]" id="{{ $seragam->id }}" {{ $seragam->tersedia? 'checked' : '' }} value="{{ $seragam->id  }}"   />
+                                    <input class="seragam-input hidden" type="checkbox" name="seragam_ids[]" id="{{ $seragam->id }}" {{ $seragam->tersedia? 'checked' : '' }} value="{{ $seragam->id  }}"   />
                                 @endforeach
                             </tbody>
                        </table>
                 </div>
 
                 <div class="flex flex-col gap-10">
-                    <button type="submit" name="action" value="complete"
+                    <button id="siap-button" type="submit" name="action" value="complete"
                         class="w-[181px] h-[59px] bg-[#6F19DC] text-xl font-bold text-white rounded-xl border-white border"
                         style="box-shadow: 2px 4px 6px 0 gray">Siap</button>
                     <button type="submit" name="action" value="draft"
@@ -117,6 +116,8 @@
                     }
                     
                 }
+
+
 
                 
             })

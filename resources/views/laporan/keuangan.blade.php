@@ -19,9 +19,9 @@
             <a class=" py-2 px-8  bg-[#6675F7]/80 text-white/60 font-semibold rounded-b-lg border-black border hover:text-white hover:bg-[#6675F7] transition duration-500"
                 href="/gudang/order">List
                 Order</a>
-            <a class=" py-4 px-8  bg-[#6F19DC] text-white font-semibold rounded-b-lg border-black border"
+            <a class=" py-2 px-8  bg-[#6F19DC]/80 text-white/60 font-semibold rounded-b-lg border-black border hover:text-white hover:bg-[#6F19DC] transition duration-500"
                 href="/laporan/lihat-stok">Laporan Stok</a>
-            <a class=" py-2 px-8  bg-[#FF6FE8]/80 text-white/60 font-semibold rounded-b-lg border-black border hover:text-white hover:bg-[#FF6FE8] transition duration-500"
+            <a class=" py-4 px-8  bg-[#FF6FE8] text-white font-semibold rounded-b-lg border-black border"
                 href="/laporan/lihat-keuangan">Laporan Keuangan</a>
         </div>
     </div>
@@ -159,6 +159,7 @@
                     <th class="px-2 text-center">Ukuran</th>
                     <th class="px-2 text-center">QTY</th>
                     <th class="px-2 text-center">Jenjang</th>
+                    <th class="px-2 text-center">Total Penjualan</th>
                 </tr>
             `;
 
@@ -169,6 +170,7 @@
                         <td class="px-2 text-center">${order.ukuran}</td>
                         <td class="px-2 text-center">${order.QTY}</td>
                         <td class="px-2 text-center">${order.jenjang.split(',').join(', ').toUpperCase()}</td>
+                        <td class="px-2 text-center">Rp. ${order.total_penjualan.toString().replace(/(.{3})/g,"$1.").slice(0, -1)}</td>
                     </tr>
                 `
             }))
@@ -208,6 +210,7 @@
                     <th class="px-2 text-center">Ukuran</th>
                     <th class="px-2 text-center">QTY</th>
                     <th class="px-2 text-center">Jenjang</th>
+                    <th class="px-2 text-center">Total Penjualan</th>
                 </tr>
             `;
 
@@ -218,6 +221,7 @@
                         <td class="px-2 text-center">${order.ukuran}</td>
                         <td class="px-2 text-center">${order.QTY}</td>
                         <td class="px-2 text-center">${order.jenjang.split(',').join(', ').toUpperCase()}</td>
+                        <td class="px-2 text-center">Rp. ${order.total_penjualan}</td>
                     </tr>
                 `
             }))
