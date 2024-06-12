@@ -87,6 +87,27 @@
     </div>
     
 <script>
+
+    const siapButton = document.getElementById('siap-button');
+    const itemLength = document.querySelectorAll('input[name="seragam_ids[]"]').length;
+    console.log(itemLength)
+
+    siapButton.addEventListener('click', function(e){
+
+        let itemCount = 0
+
+        document.querySelectorAll('input[name="seragam_ids[]"]').forEach((item) => {
+            if(item.checked){
+                itemCount++
+            }
+        });
+
+        if(itemCount != itemLength){
+            alert('Barang belum sepenuhnya siap.');;
+            e.preventDefault();
+        }
+    })
+
     document.querySelectorAll(".label-seragam").forEach(function(label){
         label.addEventListener("click", function(){
             console.log("clicked")
