@@ -23,6 +23,7 @@
                 href="/laporan/lihat-stok">Laporan Stok</a>
             <a class=" py-4 px-8  bg-[#FF6FE8] text-white font-semibold rounded-b-lg border-black border"
                 href="/laporan/lihat-keuangan">Laporan Keuangan</a>
+            <marquee class="select-none w-[495px]">Pekerjaan seberat apapun akan lebih terasa ringan jika kita tidak mengerjakannya🤗🤗</marquee>
         </div>
     </div>
 
