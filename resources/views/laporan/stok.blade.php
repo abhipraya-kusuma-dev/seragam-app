@@ -29,8 +29,18 @@
 
     <section class="flex justify-between py-10 px-[46px]">
         <div id="data-stok-container">
-            <table class="border border-black border-2 w-[646px]" id='table-data'>
-                
+            <table class="border border-black border-2 w-[646px]">
+                <thead>
+                    <tr class="divide-x-2 divide-black">
+                        <th class="px-2 text-center">Nama Barang</th>
+                        <th class="px-2 text-center">Ukuran</th>
+                        <th class="px-2 text-center">QTY</th>
+                        <th class="px-2 text-center">Jenjang</th>
+                    </tr>
+                </thead>
+                <tbody id='table-data'>
+
+                </tbody>
             </table>
         </div>
         <div id="form-stok-container">
@@ -154,25 +164,23 @@
                 return orders;
             }
 
-            tableData.innerHTML = `
-                <tr class="divide-x-2 divide-black">
-                    <th class="px-2 text-center">Nama Barang</th>
-                    <th class="px-2 text-center">Ukuran</th>
-                    <th class="px-2 text-center">QTY</th>
-                    <th class="px-2 text-center">Jenjang</th>
-                </tr>
-            `;
+            
 
-            fetchData().then((orders) => orders.forEach((order) => {
-                tableData.innerHTML += `
-                    <tr class="divide-x-2 divide-black border-bottom border-2 border-black">
-                        <td class="px-2 text-left">${order.nama_barang}</td>
-                        <td class="px-2 text-center">${order.ukuran}</td>
-                        <td class="px-2 text-center">${order.QTY}</td>
-                        <td class="px-2 text-center">${order.jenjang.split(',').join(', ').toUpperCase()}</td>
-                    </tr>
-                `
-            }))
+            fetchData().then((orders) => {
+                
+                tableData.innerHTML = '';
+                
+                orders.forEach((order) => {
+                    tableData.innerHTML += `
+                        <tr class="divide-x-2 divide-black border-bottom border-2 border-black">
+                            <td class="px-2 text-left">${order.nama_barang}</td>
+                            <td class="px-2 text-center">${order.ukuran}</td>
+                            <td class="px-2 text-center">${order.QTY}</td>
+                            <td class="px-2 text-center">${order.jenjang.split(',').join(', ').toUpperCase()}</td>
+                        </tr>
+                    `
+                })
+            })
         }
 
         getOrderan()
@@ -203,25 +211,23 @@
                 return orders;
             }
 
-            tableData.innerHTML = `
-                <tr class="divide-x-2 divide-black">
-                    <th class="px-2 text-center">Nama Barang</th>
-                    <th class="px-2 text-center">Ukuran</th>
-                    <th class="px-2 text-center">QTY</th>
-                    <th class="px-2 text-center">Jenjang</th>
-                </tr>
-            `;
+            
 
-            fetchData().then((orders) => orders.forEach((order) => {
-                tableData.innerHTML += `
-                    <tr class="divide-x-2 divide-black border-bottom border-2 border-black">
-                        <td class="px-2 text-left">${order.nama_barang}</td>
-                        <td class="px-2 text-center">${order.ukuran}</td>
-                        <td class="px-2 text-center">${order.QTY}</td>
-                        <td class="px-2 text-center">${order.jenjang.split(',').join(', ').toUpperCase()}</td>
-                    </tr>
-                `
-            }))
+            fetchData().then((orders) => {
+            
+                tableData.innerHTML = ``;
+                
+                orders.forEach((order) => {
+                    tableData.innerHTML += `
+                        <tr class="divide-x-2 divide-black border-bottom border-2 border-black">
+                            <td class="px-2 text-left">${order.nama_barang}</td>
+                            <td class="px-2 text-center">${order.ukuran}</td>
+                            <td class="px-2 text-center">${order.QTY}</td>
+                            <td class="px-2 text-center">${order.jenjang.split(',').join(', ').toUpperCase()}</td>
+                        </tr>
+                    `
+                })
+            })
 
         }
         
