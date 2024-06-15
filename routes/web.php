@@ -74,6 +74,4 @@ Route::controller(LaporanController::class)
     Route::get('/lihat-stok', 'lihatOrderanStok');
     Route::get('/lihat-keuangan', 'lihatOrderanKeuangan');
     Route::get('/export', 'export');
-    Route::get('/keuangan', 'lihatKeuangan');
   });
-
