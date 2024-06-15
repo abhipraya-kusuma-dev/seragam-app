@@ -8,6 +8,7 @@
             <a class=" py-2 px-8  bg-[#6675F7]/80 text-white/60 font-semibold rounded-b-lg border-black border hover:text-white hover:bg-[#6675F7] transition duration-500"
                 href="/gudang/order">List
                 Order</a>
+            <marquee class="select-none w-[495px]">Pekerjaan seberat apapun akan lebih terasa ringan jika kita tidak mengerjakannya🤗🤗</marquee>
         </div>
     </div>
     <div class="content-container px-[46px] w-full mt-[31px] mb-4 flex justify-between">
@@ -61,21 +62,20 @@
                             </thead>
                             <tbody>
                                 @foreach($order->seragams as $seragam)
-                                
                                     <tr data-seragam='{{ $seragam->id }}' class='label-seragam divide-x divide-gray-400  border-gray-400 border {{ $seragam->tersedia? 'bg-green-300':'bg-red-300' }}'>                                        
                                             <td class="py-3 px-2 text-left">{{ $seragam->nama_barang }}</td>
                                             <td class="py-3 px-2 text-left">{{ $seragam->ukuran }}</td>
                                             <td class="py-3 px-2 text-left">{{ $seragam->kuantitas }}</td>
                                             <td class="py-3 tersedia-status px-2 text-left">{{ $seragam->tersedia? 'Sudah' : 'Belum' }}</td>
                                     </tr>
-                                <input class="seragam-input hidden" type="checkbox" name="seragam_ids[]" id="{{ $seragam->id }}" {{ $seragam->tersedia? 'checked' : '' }} value="{{ $seragam->id  }}"   />
+                                    <input class="seragam-input hidden" type="checkbox" name="seragam_ids[]" id="{{ $seragam->id }}" {{ $seragam->tersedia? 'checked' : '' }} value="{{ $seragam->id  }}"   />
                                 @endforeach
                             </tbody>
                        </table>
                 </div>
 
                 <div class="flex flex-col gap-10">
-                    <button type="submit" name="action" value="complete"
+                    <button id="siap-button" type="submit" name="action" value="complete"
                         class="w-[181px] h-[59px] bg-[#6F19DC] text-xl font-bold text-white rounded-xl border-white border"
                         style="box-shadow: 2px 4px 6px 0 gray">Siap</button>
                     <button type="submit" name="action" value="draft"
@@ -85,8 +85,29 @@
             </form>
         </div>
     </div>
-
+    
 <script>
+
+    const siapButton = document.getElementById('siap-button');
+    const itemLength = document.querySelectorAll('input[name="seragam_ids[]"]').length;
+    console.log(itemLength)
+
+    siapButton.addEventListener('click', function(e){
+
+        let itemCount = 0
+
+        document.querySelectorAll('input[name="seragam_ids[]"]').forEach((item) => {
+            if(item.checked){
+                itemCount++
+            }
+        });
+
+        if(itemCount != itemLength){
+            alert('Barang belum sepenuhnya siap.');;
+            e.preventDefault();
+        }
+    })
+
     document.querySelectorAll(".label-seragam").forEach(function(label){
         label.addEventListener("click", function(){
             console.log("clicked")
@@ -117,6 +138,8 @@
                     
                 }
 
+
+
                 
             })
         })
@@ -124,6 +147,7 @@
 
 
 </script>
+
 @endsection
 
 

@@ -3,6 +3,7 @@
 use App\Http\Controllers\UkurController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\LaporanController;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,3 +21,5 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::get('/seragam', [UkurController::class, 'cariSeragam']);
+Route::get('/laporan/lihat/', [LaporanController::class, 'filterOrderan']);
+

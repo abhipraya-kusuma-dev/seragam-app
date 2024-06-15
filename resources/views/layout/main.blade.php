@@ -10,9 +10,9 @@
     @vite('resources/css/app.css')
 </head>
 
-<body class="no-scrollbar">
+<body class="no-scrollbar h-screen">
     @yield('content')
 
 </body>
-
+<x-footer />
 </html>

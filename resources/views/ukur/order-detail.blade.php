@@ -8,6 +8,7 @@
             <a class=" py-2 px-8  bg-[#6675F7]/80 text-white/60 font-semibold rounded-b-lg border-black border hover:text-white hover:bg-[#6675F7] transition duration-500"
                 href="/ukur/order">List
                 Order</a>
+            <marquee class="select-none w-[495px]">Cantik itu relatif, tergantung letak kamera dan intensitas cahaya..🤗🤗</marquee>
         </div>
     </div>
     <div class="content-container px-[46px] w-full mt-[31px] mb-4 flex justify-between">
