@@ -36,21 +36,29 @@ class LaporanExport implements FromCollection, WithHeadings, WithStyles, ShouldA
         return $builder->whereDate('orders.created_at', '=', Carbon::parse($this->tanggal));
       })
       ->when($this->jenjang, function (Builder $builder) {
-        return $builder->where('seragams.jenjang', 'LIKE', "%$this->jenjang%");
+        $builder->where(function (Builder $query) {
+          $splittedJenjang = explode(',', $this->jenjang);
+
+          foreach ($splittedJenjang as $jenjang) {
+            $query->where('seragams.jenjang', 'LIKE', "%$jenjang%");
+          }
+        });
+
+        return $builder;
       })
       ->select('seragams.nama_barang', 'seragams.ukuran', DB::raw('SUM(statuses.kuantitas) as QTY'), 'seragams.jenjang', 'seragams.id', 'seragams.harga', 'orders.created_at')
       ->groupBy('seragams.id', 'seragams.nama_barang', 'seragams.ukuran', 'seragams.jenjang', 'seragams.harga', 'orders.created_at')
       ->get();
 
     foreach ($orders as $order) {
-      $status = DB::table('statuses')
+      $statuses = DB::table('statuses')
         ->select('seragam_id', 'kuantitas')
         ->get();
 
-      foreach ($status as $e) {
-        if ($order->id == $e->seragam_id) {
+      foreach ($statuses as $status) {
+        if ($order->id == $status->seragam_id) {
           $order->total_penjualan = $order->total_penjualan ?? 0;
-          $order->total_penjualan = $order->total_penjualan + ($order->harga * $e->kuantitas);
+          $order->total_penjualan = $order->total_penjualan + ($order->harga * $status->kuantitas);
         }
       }
     }
