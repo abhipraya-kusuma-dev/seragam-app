@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Helper\StringHelper;
 use App\Models\Order;
+use App\Models\Seragam;
 use Exception;
 use Illuminate\Http\Request;
 use App\Models\Status;
@@ -327,11 +328,22 @@ class UkurController extends Controller
   public function confirmOrder($id)
   {
     try {
+      $orderID = Status::where('order_id', $id)
+      ->select('seragam_id', 'kuantitas')
+      ->get()
+      ->toArray();
+     
+      foreach ($orderID as $detail) {
+        Seragam::where('id', $detail['seragam_id'])
+            ->decrement('stok', $detail['kuantitas']);
+      }
+     
       Order::where('id', $id)
         ->update(['status' => 'selesai']);
       return back()->with('confirmed-success', 'Berhasil konfirmasi order');
     } catch (Exception $e) {
       return back()->with('confirmed-error', 'Gagal konfirmasi order' . $e->getMessage());
+      
     }
   }
 }
