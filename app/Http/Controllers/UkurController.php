@@ -214,13 +214,11 @@ class UkurController extends Controller
         case 'complete':
           return back()->with('create-success', 'Berhasil kirim');
           break;
-        
+
         case 'draft':
           return back()->with('create-success', 'Berhasil simpan');
           break;
       }
-
-      
     } catch (Exception $e) {
       DB::rollBack();
 
@@ -329,21 +327,21 @@ class UkurController extends Controller
   {
     try {
       $orderID = Status::where('order_id', $id)
-      ->select('seragam_id', 'kuantitas')
-      ->get()
-      ->toArray();
-     
+        ->select('seragam_id', 'kuantitas')
+        ->get()
+        ->toArray();
+
       foreach ($orderID as $detail) {
         Seragam::where('id', $detail['seragam_id'])
-            ->decrement('stok', $detail['kuantitas']);
+          ->decrement('stok', $detail['kuantitas']);
       }
-     
+
       Order::where('id', $id)
         ->update(['status' => 'selesai']);
+
       return back()->with('confirmed-success', 'Berhasil konfirmasi order');
     } catch (Exception $e) {
       return back()->with('confirmed-error', 'Gagal konfirmasi order' . $e->getMessage());
-      
     }
   }
 }
