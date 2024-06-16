@@ -312,8 +312,8 @@
                             <div>
                                 <form action="" id="cari-item-form"
                                     class="px-2 border-2 border-black rounded-lg w-72 mr-7 px-2 py-1 flex justify-between">
-                                    <input id="cari-input" class="w-full mr-1 bg-transparent outline-none" placeholder="Cari item..."
-                                        type="text" name="cari-item" />
+                                    <input id="cari-input" class="w-full mr-1 bg-transparent outline-none"
+                                        placeholder="Cari item..." type="text" name="cari-item" />
                                     <button class="bg-white w-5" type="submit"><img class="w-14"
                                             src="{{ asset('images/search.png') }}" alt=""></button>
                                 </form>
@@ -351,7 +351,8 @@
             </a>
             <a class=" py-4 px-4 bg-[#6F19DC] text-white font-semibold rounded-b-lg border-black border" href="">Edit
                 Orderan</a>
-            <marquee class="select-none w-[495px]">Cantik itu relatif, tergantung letak kamera dan intensitas cahaya..🤗🤗</marquee>
+            <marquee class="select-none w-[495px]">Cantik itu relatif, tergantung letak kamera dan intensitas cahaya..🤗🤗
+            </marquee>
         </div>
     </div>
 
@@ -364,6 +365,14 @@
                     }, 100);
                 });
             </script>
+            @push('js')
+                <script>
+                    socket.on('connect', () => {
+                        socket.emit('gudang-data-change');
+                        socket.emit('ukur-data-change');
+                    });
+                </script>
+            @endpush
         @endif
         @if (session('update-error'))
             <script>
@@ -376,114 +385,116 @@
         @endif
 
         @if ($errors->any())
-        <script>
-            window.addEventListener('load', function() {
-                let errors = @json($errors->all());
-                
+            <script>
+                window.addEventListener('load', function() {
+                    let errors = @json($errors->all());
 
-                function capitalizeFirstLetter(string){
-                    return string.charAt(0).toUpperCase() + string.slice(1);
-                }
 
-                let modifiedErrors = errors.map((error) => {
-                    return error.replace(/The (.+?) field is required\./, function(match, p1){
-                        return capitalizeFirstLetter(p1) + ' harus diisi'
+                    function capitalizeFirstLetter(string) {
+                        return string.charAt(0).toUpperCase() + string.slice(1);
+                    }
+
+                    let modifiedErrors = errors.map((error) => {
+                        return error.replace(/The (.+?) field is required\./, function(match, p1) {
+                            return capitalizeFirstLetter(p1) + ' harus diisi'
+                        });
                     });
-                });
 
-                let errorMessages = modifiedErrors.join('\n'); // Join all errors into a single string separated by new lines
-                setTimeout(function() {
-                    alert(errorMessages);
-                }, 100);
-            });
-        </script>
+                    let errorMessages = modifiedErrors.join(
+                        '\n'); // Join all errors into a single string separated by new lines
+                    setTimeout(function() {
+                        alert(errorMessages);
+                    }, 100);
+                });
+            </script>
         @endif
     </div>
 
     <section class="flex justify-between py-10 px-[46px]">
 
         <div class="flex flex-col gap-5">
-            
-                <form id="create-and-edit-form" action="/ukur/update/{{ $order->id }}" class="flex flex-col gap-4"
-                    method="POST">
-                    @method('PATCH')
-                    @csrf
-                    <div class="border rounded-xl border-black px-4 py-2 flex flex-col gap-4" style="box-shadow: 2px 4px 6px rgb(177, 177, 177)">
-                        <div id="hidden-input" class="hidden">
 
-                        </div>
-                        <div>
-                            <h1 class="font-bold">Nomor Urut</h1>
-                            <input class="font-semibold bg-transparent cursor-not-allowed pointer-events-none"
-                                id="order-nomor-urut" name="nomor_urut" value="{{ $order->nomor_urut }}" />
-                        </div>
-                        <h1 class="font-bold">Jenjang</h1>
-                        <div class="flex items-center gap-4">
-                            <label for="sd"
-                                class="has-[:checked]:border-2 has-[:checked]:border-[#FF5656] has-[:checked]:bg-white has-[:checked]:text-[#FF5656] border-2 border-transparent select-none text-center rounded-[8px] py-1 px-8 bg-[#FF5656] text-white font-semibold"
-                                style="box-shadow: 2px 4px 5px rgb(177, 177, 177)">
-                                SD
-                                <input tabindex="1" type="radio" name="jenjang" id="sd" value="sd"
-                                    {{ $order->jenjang === 'sd' ? 'checked' : '' }} class="hidden" />
-                            </label>
+            <form id="create-and-edit-form" action="/ukur/update/{{ $order->id }}" class="flex flex-col gap-4"
+                method="POST">
+                @method('PATCH')
+                @csrf
+                <div class="border rounded-xl border-black px-4 py-2 flex flex-col gap-4"
+                    style="box-shadow: 2px 4px 6px rgb(177, 177, 177)">
+                    <div id="hidden-input" class="hidden">
 
-                            <label for="smp"
-                                class="has-[:checked]:border-2 has-[:checked]:border-[#3485FF] has-[:checked]:bg-white has-[:checked]:text-[#3485FF] border-2 border-transparent select-none text-center rounded-[8px] py-1 px-7 bg-[#3485FF] text-white font-semibold"
-                                style="box-shadow: 2px 4px 5px rgb(177, 177, 177)">
-                                SMP
-                                <input type="radio" name="jenjang" id="smp" value="smp" class="hidden"
-                                    {{ $order->jenjang === 'smp' ? 'checked' : '' }} />
-                            </label>
-
-                            <label for="sma"
-                                class="has-[:checked]:border-2 has-[:checked]:border-[#2BCB4E] has-[:checked]:bg-white has-[:checked]:text-[#2BCB4E] border-2 border-transparent select-none text-center rounded-[8px] py-1 px-7 bg-[#2BCB4E] text-white font-semibold"
-                                style="box-shadow: 2px 4px 5px rgb(177, 177, 177)">
-                                SMA
-                                <input type="radio" name="jenjang" id="sma" value="sma" class="hidden"
-                                    {{ $order->jenjang === 'sma' ? 'checked' : '' }} />
-                            </label>
-
-                            <label for="smk"
-                                class="has-[:checked]:border-2 has-[:checked]:border-[#DC6B19] has-[:checked]:bg-white has-[:checked]:text-[#DC6B19] border-2 border-transparent select-none text-center rounded-[8px] py-1 px-7 bg-[#DC6B19] text-white font-semibold"
-                                style="box-shadow: 2px 4px 5px rgb(177, 177, 177)">
-                                SMK
-                                <input type="radio" name="jenjang" id="smk" value="smk" class="hidden"
-                                    {{ $order->jenjang === 'smk' ? 'checked' : '' }} />
-                            </label>
-                        </div>
-
-                        <h1 class="font-bold">Jenis Kelamin</h1>
-                        <div class="flex items-center gap-4">
-                            <label for="cowo"
-                                class="has-[:checked]:border-2 has-[:checked]:border-[#3485FF] has-[:checked]:bg-white has-[:checked]:text-[#3485FF] border-2 border-transparent select-none rounded-[8px] py-1 px-7 bg-[#3485FF] text-white font-semibold"
-                                style="box-shadow: 2px 4px 5px rgb(177, 177, 177)">
-                                Pria
-                                <input type="radio" name="jenis_kelamin" id="cowo" value="cowo" class="hidden"
-                                    {{ $order->jenis_kelamin === 'cowo' ? 'checked' : '' }} />
-                            </label>
-
-                            <label for="cewe"
-                                class="has-[:checked]:border-2 has-[:checked]:border-[#FF34C6] has-[:checked]:bg-white has-[:checked]:text-[#FF34C6] border-2 border-2 border-transparent select-none rounded-[8px] py-1 px-5 bg-[#FF34C6] text-white font-semibold"
-                                style="box-shadow: 2px 4px 5px rgb(177, 177, 177)">
-                                Wanita
-                                <input type="radio" name="jenis_kelamin" id="cewe" value="cewe" class="hidden"
-                                    {{ $order->jenis_kelamin === 'cewe' ? 'checked' : '' }} />
-                            </label>
-                        </div>
-                        <div>
-                            <label for="nama_lengkap" class="font-bold">Nama Lengkap</label><br>
-                            <input list="list_nama_barang" id="nama_lengkap" name="nama_lengkap"
-                                class="outline-none border rounded border-black px-2 font-bold mt-2 mb-2"
-                                placeholder="Tuliskan nama..." value="{{ $order->nama_lengkap }}" />
-                        </div>
                     </div>
-                    <div class="flex gap-5">
-                        <button type="submit" name="action" value="update" id="submit-button"
-                            class="w-[181px] h-[59px] bg-[#2BCB4E] text-xl font-bold text-white rounded-xl border-white border"
-                            style="box-shadow: 2px 4px 6px 0 gray">Update</button>
+                    <div>
+                        <h1 class="font-bold">Nomor Urut</h1>
+                        <input class="font-semibold bg-transparent cursor-not-allowed pointer-events-none"
+                            id="order-nomor-urut" name="nomor_urut" value="{{ $order->nomor_urut }}" />
                     </div>
-                </form>
-            
+                    <h1 class="font-bold">Jenjang</h1>
+                    <div class="flex items-center gap-4">
+                        <label for="sd"
+                            class="has-[:checked]:border-2 has-[:checked]:border-[#FF5656] has-[:checked]:bg-white has-[:checked]:text-[#FF5656] border-2 border-transparent select-none text-center rounded-[8px] py-1 px-8 bg-[#FF5656] text-white font-semibold"
+                            style="box-shadow: 2px 4px 5px rgb(177, 177, 177)">
+                            SD
+                            <input tabindex="1" type="radio" name="jenjang" id="sd" value="sd"
+                                {{ $order->jenjang === 'sd' ? 'checked' : '' }} class="hidden" />
+                        </label>
+
+                        <label for="smp"
+                            class="has-[:checked]:border-2 has-[:checked]:border-[#3485FF] has-[:checked]:bg-white has-[:checked]:text-[#3485FF] border-2 border-transparent select-none text-center rounded-[8px] py-1 px-7 bg-[#3485FF] text-white font-semibold"
+                            style="box-shadow: 2px 4px 5px rgb(177, 177, 177)">
+                            SMP
+                            <input type="radio" name="jenjang" id="smp" value="smp" class="hidden"
+                                {{ $order->jenjang === 'smp' ? 'checked' : '' }} />
+                        </label>
+
+                        <label for="sma"
+                            class="has-[:checked]:border-2 has-[:checked]:border-[#2BCB4E] has-[:checked]:bg-white has-[:checked]:text-[#2BCB4E] border-2 border-transparent select-none text-center rounded-[8px] py-1 px-7 bg-[#2BCB4E] text-white font-semibold"
+                            style="box-shadow: 2px 4px 5px rgb(177, 177, 177)">
+                            SMA
+                            <input type="radio" name="jenjang" id="sma" value="sma" class="hidden"
+                                {{ $order->jenjang === 'sma' ? 'checked' : '' }} />
+                        </label>
+
+                        <label for="smk"
+                            class="has-[:checked]:border-2 has-[:checked]:border-[#DC6B19] has-[:checked]:bg-white has-[:checked]:text-[#DC6B19] border-2 border-transparent select-none text-center rounded-[8px] py-1 px-7 bg-[#DC6B19] text-white font-semibold"
+                            style="box-shadow: 2px 4px 5px rgb(177, 177, 177)">
+                            SMK
+                            <input type="radio" name="jenjang" id="smk" value="smk" class="hidden"
+                                {{ $order->jenjang === 'smk' ? 'checked' : '' }} />
+                        </label>
+                    </div>
+
+                    <h1 class="font-bold">Jenis Kelamin</h1>
+                    <div class="flex items-center gap-4">
+                        <label for="cowo"
+                            class="has-[:checked]:border-2 has-[:checked]:border-[#3485FF] has-[:checked]:bg-white has-[:checked]:text-[#3485FF] border-2 border-transparent select-none rounded-[8px] py-1 px-7 bg-[#3485FF] text-white font-semibold"
+                            style="box-shadow: 2px 4px 5px rgb(177, 177, 177)">
+                            Pria
+                            <input type="radio" name="jenis_kelamin" id="cowo" value="cowo" class="hidden"
+                                {{ $order->jenis_kelamin === 'cowo' ? 'checked' : '' }} />
+                        </label>
+
+                        <label for="cewe"
+                            class="has-[:checked]:border-2 has-[:checked]:border-[#FF34C6] has-[:checked]:bg-white has-[:checked]:text-[#FF34C6] border-2 border-2 border-transparent select-none rounded-[8px] py-1 px-5 bg-[#FF34C6] text-white font-semibold"
+                            style="box-shadow: 2px 4px 5px rgb(177, 177, 177)">
+                            Wanita
+                            <input type="radio" name="jenis_kelamin" id="cewe" value="cewe" class="hidden"
+                                {{ $order->jenis_kelamin === 'cewe' ? 'checked' : '' }} />
+                        </label>
+                    </div>
+                    <div>
+                        <label for="nama_lengkap" class="font-bold">Nama Lengkap</label><br>
+                        <input list="list_nama_barang" id="nama_lengkap" name="nama_lengkap"
+                            class="outline-none border rounded border-black px-2 font-bold mt-2 mb-2"
+                            placeholder="Tuliskan nama..." value="{{ $order->nama_lengkap }}" />
+                    </div>
+                </div>
+                <div class="flex gap-5">
+                    <button type="submit" name="action" value="update" id="submit-button"
+                        class="w-[181px] h-[59px] bg-[#2BCB4E] text-xl font-bold text-white rounded-xl border-white border"
+                        style="box-shadow: 2px 4px 6px 0 gray">Update</button>
+                </div>
+            </form>
+
         </div>
 
         <div class="flex flex-col gap-4 items-end">
@@ -558,13 +569,13 @@
             const cariVal = document.getElementById('cari-input').value;
 
             let jenjangVal = '';
-            
+
             document.querySelectorAll('input[name="jenjang"]')
-            .forEach((radio) => {
-                if(radio.checked){
-                    jenjangVal = radio.value;
-                }
-            });
+                .forEach((radio) => {
+                    if (radio.checked) {
+                        jenjangVal = radio.value;
+                    }
+                });
 
             const fetchData = async () => {
                 const res = await fetch(`/api/seragam?search=${cariVal}&jenjang=${jenjangVal}`);

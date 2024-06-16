@@ -1,4 +1,5 @@
 const express = require("express");
+const { SocketAddress } = require("net");
 const app = express();
 
 const server = require("http").createServer(app);
@@ -15,8 +16,14 @@ server.listen(3000, () => {
 io.on("connection", (socket) => {
   console.log("socket connected");
 
-  socket.on("input-bikin-seragam", (seragam) => {
-    io.emit("update-data-seragam", seragam);
+  socket.on("gudang-data-change", () => {
+    console.log("gudang data change");
+    io.emit("gudang-data-change");
+  });
+
+  socket.on("ukur-data-change", () => {
+    console.log("ukur data change");
+    io.emit("ukur-data-change");
   });
 
   socket.on("disconnect", () => {

@@ -8,13 +8,22 @@
             <a class=" py-2 px-8  bg-[#6675F7]/80 text-white/60 font-semibold rounded-b-lg border-black border hover:text-white hover:bg-[#6675F7] transition duration-500"
                 href="/gudang/order">List
                 Order</a>
-            <marquee class="select-none w-[495px]">Pekerjaan seberat apapun akan lebih terasa ringan jika kita tidak mengerjakannya🤗🤗</marquee>
+            <marquee class="select-none w-[495px]">Pekerjaan seberat apapun akan lebih terasa ringan jika kita tidak
+                mengerjakannya🤗🤗</marquee>
         </div>
     </div>
     <div class="content-container px-[46px] w-full mt-[31px] mb-4 flex justify-between">
         <div>
             @if (session('update-success'))
                 <p class="text-green-600">{{ session('update-success') }}</p>
+                @push('js')
+                    <script>
+                        socket.on('connect', () => {
+                            socket.emit('gudang-data-change');
+                            socket.emit('ukur-data-change');
+                        });
+                    </script>
+                @endpush
             @endif
             @if (session('update-error'))
                 <p class="text-red-600">{{ session('update-error') }}</p>
@@ -50,28 +59,32 @@
                 @csrf
 
                 <div class="grid grid-cols-1 gap-2 ">
-                    
-                       <table class="w-[541px]">
-                            <thead>
-                                <tr class='divide-x divide-gray-400  border-gray-400 border'>
-                                    <th class="px-2 text-left">Nama Barang</th>
-                                    <th class="px-2 text-left">Ukuran</th >
-                                    <th class="px-2 text-left">QTY</th >
-                                    <th class="px-2 text-left">Ceklis</th>
+
+                    <table class="w-[541px]">
+                        <thead>
+                            <tr class='divide-x divide-gray-400  border-gray-400 border'>
+                                <th class="px-2 text-left">Nama Barang</th>
+                                <th class="px-2 text-left">Ukuran</th>
+                                <th class="px-2 text-left">QTY</th>
+                                <th class="px-2 text-left">Ceklis</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($order->seragams as $seragam)
+                                <tr data-seragam='{{ $seragam->id }}'
+                                    class='label-seragam divide-x divide-gray-400  border-gray-400 border {{ $seragam->tersedia ? 'bg-green-300' : 'bg-red-300' }}'>
+                                    <td class="py-3 px-2 text-left">{{ $seragam->nama_barang }}</td>
+                                    <td class="py-3 px-2 text-left">{{ $seragam->ukuran }}</td>
+                                    <td class="py-3 px-2 text-left">{{ $seragam->kuantitas }}</td>
+                                    <td class="py-3 tersedia-status px-2 text-left">
+                                        {{ $seragam->tersedia ? 'Sudah' : 'Belum' }}</td>
                                 </tr>
-                            </thead>
-                            <tbody>
-                                @foreach($order->seragams as $seragam)
-                                    <tr data-seragam='{{ $seragam->id }}' class='label-seragam divide-x divide-gray-400  border-gray-400 border {{ $seragam->tersedia? 'bg-green-300':'bg-red-300' }}'>                                        
-                                            <td class="py-3 px-2 text-left">{{ $seragam->nama_barang }}</td>
-                                            <td class="py-3 px-2 text-left">{{ $seragam->ukuran }}</td>
-                                            <td class="py-3 px-2 text-left">{{ $seragam->kuantitas }}</td>
-                                            <td class="py-3 tersedia-status px-2 text-left">{{ $seragam->tersedia? 'Sudah' : 'Belum' }}</td>
-                                    </tr>
-                                    <input class="seragam-input hidden" type="checkbox" name="seragam_ids[]" id="{{ $seragam->id }}" {{ $seragam->tersedia? 'checked' : '' }} value="{{ $seragam->id  }}"   />
-                                @endforeach
-                            </tbody>
-                       </table>
+                                <input class="seragam-input hidden" type="checkbox" name="seragam_ids[]"
+                                    id="{{ $seragam->id }}" {{ $seragam->tersedia ? 'checked' : '' }}
+                                    value="{{ $seragam->id }}" />
+                            @endforeach
+                        </tbody>
+                    </table>
                 </div>
 
                 <div class="flex flex-col gap-10">
@@ -85,69 +98,63 @@
             </form>
         </div>
     </div>
-    
-<script>
 
-    const siapButton = document.getElementById('siap-button');
-    const itemLength = document.querySelectorAll('input[name="seragam_ids[]"]').length;
-    console.log(itemLength)
+    <script>
+        const siapButton = document.getElementById('siap-button');
+        const itemLength = document.querySelectorAll('input[name="seragam_ids[]"]').length;
+        console.log(itemLength)
 
-    siapButton.addEventListener('click', function(e){
+        siapButton.addEventListener('click', function(e) {
 
-        let itemCount = 0
+            let itemCount = 0
 
-        document.querySelectorAll('input[name="seragam_ids[]"]').forEach((item) => {
-            if(item.checked){
-                itemCount++
-            }
-        });
-
-        if(itemCount != itemLength){
-            alert('Barang belum sepenuhnya siap.');;
-            e.preventDefault();
-        }
-    })
-
-    document.querySelectorAll(".label-seragam").forEach(function(label){
-        label.addEventListener("click", function(){
-            console.log("clicked")
-            const seragamId = label.dataset.seragam
-            console.log(seragamId)
-
-            document.querySelectorAll(".seragam-input").forEach(function(input){
-                if(seragamId === input.id){
-                    if(input.checked){
-                        input.checked = false;
-                        console.log(label)
-                        label.classList.remove("bg-green-300");
-                        label.classList.add("bg-red-300");
-                        label.querySelector(".tersedia-status").textContent = "Belum"
-                    } else {
-                        console.log(label)
-                        input.checked = true;
-                        label.classList.remove("bg-red-300");
-                        label.classList.add("bg-green-300");
-                        label.querySelector(".tersedia-status").textContent = "Sudah"           
-                    }
-                } else{
-                    if (!document.querySelector(`.seragam-input[id="${seragamId}"]:checked`)) {
-                    label.classList.remove("bg-green-300");
-                    label.classList.add("bg-red-300");
-                    label.querySelector(".tersedia-status").textContent = "Belum"
-                    }
-                    
+            document.querySelectorAll('input[name="seragam_ids[]"]').forEach((item) => {
+                if (item.checked) {
+                    itemCount++
                 }
+            });
+
+            if (itemCount != itemLength) {
+                alert('Barang belum sepenuhnya siap.');;
+                e.preventDefault();
+            }
+        })
+
+        document.querySelectorAll(".label-seragam").forEach(function(label) {
+            label.addEventListener("click", function() {
+                console.log("clicked")
+                const seragamId = label.dataset.seragam
+                console.log(seragamId)
+
+                document.querySelectorAll(".seragam-input").forEach(function(input) {
+                    if (seragamId === input.id) {
+                        if (input.checked) {
+                            input.checked = false;
+                            console.log(label)
+                            label.classList.remove("bg-green-300");
+                            label.classList.add("bg-red-300");
+                            label.querySelector(".tersedia-status").textContent = "Belum"
+                        } else {
+                            console.log(label)
+                            input.checked = true;
+                            label.classList.remove("bg-red-300");
+                            label.classList.add("bg-green-300");
+                            label.querySelector(".tersedia-status").textContent = "Sudah"
+                        }
+                    } else {
+                        if (!document.querySelector(`.seragam-input[id="${seragamId}"]:checked`)) {
+                            label.classList.remove("bg-green-300");
+                            label.classList.add("bg-red-300");
+                            label.querySelector(".tersedia-status").textContent = "Belum"
+                        }
+
+                    }
 
 
 
-                
+
+                })
             })
         })
-    })
-
-
-</script>
-
+    </script>
 @endsection
-
-
