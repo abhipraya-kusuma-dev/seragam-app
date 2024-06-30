@@ -139,7 +139,7 @@ class UkurController extends Controller
   public function bikinOrder()
   {
     $lastOrder = Order::orderBy('id', 'desc')->first();
-    $lastOrderNum = (int) substr($lastOrder->nomor_urut, 1);
+    $lastOrderNum = !is_null($lastOrder) ? (int) substr($lastOrder->nomor_urut, 1) : 0;
 
     $lastOrderNum += 1;
 
