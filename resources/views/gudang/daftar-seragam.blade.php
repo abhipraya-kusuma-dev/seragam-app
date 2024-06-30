@@ -14,13 +14,12 @@
                 href="/laporan/lihat-stok">Laporan Stok</a>
             <a class=" py-2 px-8  bg-[#FF6FE8]/80 text-white/60 font-semibold rounded-b-lg border-black border hover:text-white hover:bg-[#FF6FE8] transition duration-500"
                 href="/laporan/lihat-keuangan">Laporan Keuangan</a>
-            <marquee class="select-none w-[495px]">Pekerjaan seberat apapun akan lebih terasa ringan jika kita tidak mengerjakannya🤗🤗</marquee>
+            <marquee class="select-none w-[495px]">Pekerjaan seberat apapun akan lebih terasa ringan jika kita tidak
+                mengerjakannya🤗🤗</marquee>
         </div>
     </div>
     <section class="flex justify-between py-10 px-[46px]">
         <div class="flex flex-col gap-5">
-
-        
             <div class="border rounded-xl border-black px-4 py-2" style="box-shadow: 2px 4px 6px rgb(177, 177, 177)">
                 <div class="px-[46px]">
                     @if (session('create-success'))
@@ -81,24 +80,25 @@
                             });
                         </script>
                     @endif
-            
+
                     @if ($errors->any())
                         <script>
                             window.addEventListener('load', function() {
                                 let errors = @json($errors->all());
-                                
 
-                                function capitalizeFirstLetter(string){
+
+                                function capitalizeFirstLetter(string) {
                                     return string.charAt(0).toUpperCase() + string.slice(1);
                                 }
 
                                 let modifiedErrors = errors.map((error) => {
-                                    return error.replace(/The (.+?) field is required\./, function(match, p1){
+                                    return error.replace(/The (.+?) field is required\./, function(match, p1) {
                                         return capitalizeFirstLetter(p1) + ' harus diisi'
                                     });
                                 });
 
-                                let errorMessages = modifiedErrors.join('\n'); // Join all errors into a single string separated by new lines
+                                let errorMessages = modifiedErrors.join(
+                                    '\n'); // Join all errors into a single string separated by new lines
                                 setTimeout(function() {
                                     alert(errorMessages);
                                 }, 100);
@@ -110,13 +110,9 @@
                                 <span class="text-red-600">*</span>
                             `
                         </script> --}}
-                        
                     @endif
                 </div>
                 <form id="create-and-edit-form" action="/gudang/seragam/bikin" class="flex flex-col gap-4" method="POST">
-                    <div id="method-field">
-
-                    </div>
                     @csrf
                     <h1 class="font-bold">Jenjang</h1>
                     <div class="flex items-center gap-4">
@@ -202,101 +198,127 @@
                         </div>
                     </div>
 
+                    <div class="flex gap-5">
+                        <button type="submit" id="submit-button"
+                            class="w-[181px] h-[59px] bg-[#2BCB4E] text-xl font-bold text-white rounded-xl border-white border"
+                            style="box-shadow: 2px 4px 6px 0 gray">Simpan</button>
+                        <button type="button" id="cancel-button"
+                            class="w-[181px] h-[59px] bg-red-600 text-xl font-bold text-white rounded-xl border-white border hidden"
+                            style="box-shadow: 2px 4px 6px 0 gray">Cancel Edit</button>
+                    </div>
+                </form>
             </div>
-            <div class="flex gap-5">
-                <button type="submit" id="submit-button"
-                    class="w-[181px] h-[59px] bg-[#2BCB4E] text-xl font-bold text-white rounded-xl border-white border"
-                    style="box-shadow: 2px 4px 6px 0 gray">Simpan</button>
-                <button type="button" id="cancel-button"
-                    class="w-[181px] h-[59px] bg-red-600 text-xl font-bold text-white rounded-xl border-white border hidden"
-                    style="box-shadow: 2px 4px 6px 0 gray">Cancel Edit</button>
-            </div>
-            </form>
         </div>
 
-        <div>
-            <table class="border-2 border-black">
-                <thead>
-                    <tr class="divide-x-2 divide-black border-b-2 border-black">
-                        <th class="px-4">Nama Barang</th>
-                        <th class="px-4">Ukuran</th>
-                        <th class="px-4">Stok</th>
-                        <th class="px-4">Harga</th>
-                        <th class="px-4">Aksi</th>
-                    </tr>
-                </thead>
-                <tbody class="divide-y-2 divide-black">
-                    @foreach ($data as $seragam)
-                        <tr data-seragam="{{ $seragam['id'] }}" class="seragam-row divide-x-2 divide-black">
-                            <td id="nama-barang-{{ $seragam['id'] }}" class="px-4"
-                                rowspan="{{ count($seragam['semua_ukuran']) > 0 ? count($seragam['semua_ukuran']) + 1 : 1 }}">
-                                {{ $seragam['nama_barang'] }}</td>
-                            <td id="ukuran-{{ $seragam['id'] }}" class="px-4" align="center">{{ $seragam['ukuran'] }}</td>
-                            <td id="jenjang-{{ $seragam['id'] }}" class="hidden">{{ $seragam['jenjang'] }}</td>
-                            <td id="jenis-kelamin-{{ $seragam['id'] }}" class="hidden">{{ $seragam['jenis_kelamin'] }}
-                            </td>
-                            <td id="stok-{{ $seragam['id'] }}" class="px-4" align="center">{{ $seragam['stok'] }}</td>
-                            <td id="harga-{{ $seragam['id'] }}" class="px-4">{{ $seragam['harga'] }}</td>
-                            <td class="px-4 ">
-                                <div class="flex gap-2">
-                                    <div>
-                                        <button class=" text-blue-500 hover:underline"
-                                            id="edit-button-{{ $seragam['id'] }}">Edit</button>
-                                    </div>
-                                    <div>
-                                        <h1>/</h1>
-                                    </div>
-                                    <div>
-                                        <form action="/gudang/seragam/delete/{{ $seragam['id'] }}" method="post">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button class="text-red-500 hover:underline" type="submit">Hapus</button>
-                                        </form>
-                                    </div>
-                                </div>
-                            </td>
+        <div class="flex flex-col items-scratch">
+            <div class="flex justify-between items-center gap-2 mb-2">
+                <form method="post" action="/gudang/seragam/bikin/import"
+                    class="gap-4 flex justify-between items-center grow" enctype="multipart/form-data">
+                    @csrf
+                    <input type="file" name="excel-file" required />
+                    <button type="submit" class="py-2 px-4 bg-green-600 hover:bg-green-700 text-white rounded-md">Import
+                        dari
+                        Eksel 😎</button>
+                </form>
+                <form action="/gudang/seragam/download/template" method="post">
+                  @csrf
+                  <button type="submit" class="py-2 px-4 border border-green-600 rounded-md">Download Template Excel</button>
+                </form>
+            </div>
+
+            <div class="max-h-[50vh] p-2 border border-green-600 overflow-y-auto">
+                <table class="border-2 border-black">
+                    <thead>
+                        <tr class="divide-x-2 divide-black border-b-2 border-black">
+                            <th class="px-4">Nama Barang</th>
+                            <th class="px-4">Ukuran</th>
+                            <th class="px-4">Stok</th>
+                            <th class="px-4">Harga</th>
+                            <th class="px-4">Aksi</th>
                         </tr>
-                        @if (count($seragam['semua_ukuran']) > 0)
-                            @foreach ($seragam['semua_ukuran'] as $ukuran)
-                                <tr data-seragam="{{ $ukuran['id'] }}" class="seragam-row divide-x-2 divide-black">
-                                    <td id="nama-barang-{{ $ukuran['id'] }}" class="hidden">{{ $ukuran['nama_barang'] }}
-                                    </td>
-                                    <td id="ukuran-{{ $ukuran['id'] }}" class="px-4 border-2 border-black" align="center">
-                                        {{ $ukuran['ukuran'] }}</td>
-                                    <td id="jenjang-{{ $ukuran['id'] }}" class="hidden">{{ $ukuran['jenjang'] }}</td>
-                                    <td id="jenis-kelamin-{{ $ukuran['id'] }}" class="hidden">
-                                        {{ $ukuran['jenis_kelamin'] }}</td>
-                                    <td id="stok-{{ $ukuran['id'] }}" class="px-4" align="center">{{ $ukuran['stok'] }}</td>
-                                    <td id="harga-{{ $ukuran['id'] }}" class="px-4">{{ $ukuran['harga'] }}</td>
-                                    <td class="px-4">
-                                        <div class="flex gap-2">
-                                            <div>
-                                                <button class="edit-button text-blue-500 hover:underline"
-                                                    id="edit-button-{{ $ukuran['id'] }}">Edit</button>
+                    </thead>
+                    <tbody class="divide-y-2 divide-black">
+                        @foreach ($data as $seragam)
+                            <tr data-seragam="{{ $seragam['id'] }}" class="seragam-row divide-x-2 divide-black">
+                                <td id="nama-barang-{{ $seragam['id'] }}" class="px-4"
+                                    rowspan="{{ count($seragam['semua_ukuran']) > 0 ? count($seragam['semua_ukuran']) + 1 : 1 }}">
+                                    {{ $seragam['nama_barang'] }}</td>
+                                <td id="ukuran-{{ $seragam['id'] }}" class="px-4" align="center">
+                                    {{ $seragam['ukuran'] }}
+                                </td>
+                                <td id="jenjang-{{ $seragam['id'] }}" class="hidden">{{ $seragam['jenjang'] }}</td>
+                                <td id="jenis-kelamin-{{ $seragam['id'] }}" class="hidden">
+                                    {{ $seragam['jenis_kelamin'] }}
+                                </td>
+                                <td id="stok-{{ $seragam['id'] }}" class="px-4" align="center">{{ $seragam['stok'] }}
+                                </td>
+                                <td id="harga-{{ $seragam['id'] }}" class="px-4">{{ $seragam['harga'] }}</td>
+                                <td class="px-4 ">
+                                    <div class="flex gap-2">
+                                        <div>
+                                            <button class=" text-blue-500 hover:underline"
+                                                id="edit-button-{{ $seragam['id'] }}">Edit</button>
+                                        </div>
+                                        <div>
+                                            <h1>/</h1>
+                                        </div>
+                                        <div>
+                                            <form action="/gudang/seragam/delete/{{ $seragam['id'] }}" method="post">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button class="text-red-500 hover:underline" type="submit">Hapus</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            @if (count($seragam['semua_ukuran']) > 0)
+                                @foreach ($seragam['semua_ukuran'] as $ukuran)
+                                    <tr data-seragam="{{ $ukuran['id'] }}" class="seragam-row divide-x-2 divide-black">
+                                        <td id="nama-barang-{{ $ukuran['id'] }}" class="hidden">
+                                            {{ $ukuran['nama_barang'] }}
+                                        </td>
+                                        <td id="ukuran-{{ $ukuran['id'] }}" class="px-4 border-2 border-black"
+                                            align="center">
+                                            {{ $ukuran['ukuran'] }}</td>
+                                        <td id="jenjang-{{ $ukuran['id'] }}" class="hidden">{{ $ukuran['jenjang'] }}
+                                        </td>
+                                        <td id="jenis-kelamin-{{ $ukuran['id'] }}" class="hidden">
+                                            {{ $ukuran['jenis_kelamin'] }}</td>
+                                        <td id="stok-{{ $ukuran['id'] }}" class="px-4" align="center">
+                                            {{ $ukuran['stok'] }}</td>
+                                        <td id="harga-{{ $ukuran['id'] }}" class="px-4">{{ $ukuran['harga'] }}</td>
+                                        <td class="px-4">
+                                            <div class="flex gap-2">
+                                                <div>
+                                                    <button class="edit-button text-blue-500 hover:underline"
+                                                        id="edit-button-{{ $ukuran['id'] }}">Edit</button>
+                                                </div>
+                                                <div>
+                                                    <h1>/</h1>
+                                                </div>
+                                                <div>
+                                                    <form action="/gudang/seragam/delete/{{ $ukuran['id'] }}"
+                                                        method="post">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button class="text-red-500 hover:underline"
+                                                            type="submit">Hapus</button>
+                                                    </form>
+                                                </div>
                                             </div>
-                                            <div>
-                                                <h1>/</h1>
-                                            </div>
-                                            <div>
-                                                <form action="/gudang/seragam/delete/{{ $ukuran['id'] }}" method="post">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button class="text-red-500 hover:underline"
-                                                        type="submit">Hapus</button>
-                                                </form>
-                                            </div>
-                                            <div>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        @endif
-                    @endforeach
-                </tbody>
-            </table>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            @endif
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
         </div>
-        
+
     </section>
-    
+
 
     <script>
         const methodField = document.getElementById("method-field");
@@ -313,39 +335,39 @@
         const jenjang = document.querySelectorAll('input[name="jenjang[]"]');
         const jenkel = document.querySelectorAll('input[name="jenis_kelamin[]"]')
 
-        submitButton.addEventListener('click', function(e){
+        submitButton.addEventListener('click', function(e) {
             let jenjangCheck = false;
 
-            jenjang.forEach( (checkbox) => {
-                if(checkbox.checked){
+            jenjang.forEach((checkbox) => {
+                if (checkbox.checked) {
                     jenjangCheck = true;
                 }
             });
 
             let jenkelCheck = false;
 
-            jenkel.forEach( (checkbox) => {
-                if(checkbox.checked){
+            jenkel.forEach((checkbox) => {
+                if (checkbox.checked) {
                     jenkelCheck = true;
                 }
             });
 
-            if(!jenjangCheck && !jenkelCheck){
+            if (!jenjangCheck && !jenkelCheck) {
                 alert('Dimohon untuk mengisi Jenjang dan Jenis Kelamin');
                 e.preventDefault();
             } else
-            if(!jenjangCheck){
+            if (!jenjangCheck) {
                 alert('Tolong pilih setidaknya satu jenjang');
                 e.preventDefault();
             } else
-            if(!jenkelCheck){
+            if (!jenkelCheck) {
                 alert('Jenis kelamin belum dipilih')
                 e.preventDefault();
             }
 
-            
+
         });
-        
+
 
         document.querySelectorAll(".seragam-row").forEach(function(row) {
 
@@ -438,5 +460,4 @@
 
         })
     </script>
-    
 @endsection
