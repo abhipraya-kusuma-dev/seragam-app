@@ -227,7 +227,7 @@
             </div>
 
             <div class="max-h-[50vh] p-2 border border-green-600 overflow-y-auto">
-                <table class="border-2 border-black">
+                <table class="border-2 border-black w-full">
                     <thead>
                         <tr class="divide-x-2 divide-black border-b-2 border-black">
                             <th class="px-4">Nama Barang</th>
