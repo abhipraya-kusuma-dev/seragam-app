@@ -48,6 +48,8 @@ Route::controller(GudangController::class)
     Route::put('/order/{nomor_urut}/update', 'updateOrderanMasuk')->can('update-gudang');
 
     Route::get('/seragam/bikin', 'daftarSeragam')->can('create-gudang');
+    Route::post('/seragam/bikin/import', 'inputSeragamDariExcel')->can('create-gudang');
+    Route::post('/seragam/download/template', 'downloadTemplateExcel')->can('create-gudang');
     Route::post('/seragam/bikin', 'inputBikinSeragam')->can('create-gudang');
     Route::patch('/seragam/update/{id}', 'updateSeragam')->can('update-gudang');
     Route::delete('/seragam/delete/{id}', 'deleteSeragam')->can('delete-gudang');
@@ -64,6 +66,7 @@ Route::controller(UkurController::class)
     Route::post('/bikin', 'inputBikinOrder')->can('create-ukur');
     Route::patch('/update/{id}', 'updateOrder')->can('update-ukur');
     Route::delete('/delete/{id}', 'deleteOrder')->can('delete-ukur');
+    Route::post('/confirm/{id}', 'confirmOrder')->can('update-ukur');
   });
 
 Route::controller(LaporanController::class)
@@ -74,4 +77,3 @@ Route::controller(LaporanController::class)
     Route::get('/lihat-keuangan', 'lihatOrderanKeuangan');
     Route::get('/export', 'export');
   });
-

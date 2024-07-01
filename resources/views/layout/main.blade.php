@@ -13,6 +13,16 @@
 <body class="no-scrollbar h-screen">
     @yield('content')
 
+    <x-footer />
+    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+    <script>
+        const socket = io(`{{ env('SOCKET_IO_SERVER') }}`);
+
+        if (!window.socket) {
+            window.socket = socket
+        }
+    </script>
+    @stack('js')
 </body>
-<x-footer />
+
 </html>

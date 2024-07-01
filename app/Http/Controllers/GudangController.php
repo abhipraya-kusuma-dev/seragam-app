@@ -3,12 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Helper\StringHelper;
+use App\Imports\SeragamImport;
 use App\Models\Seragam;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
 
 class GudangController extends Controller
 {
@@ -220,10 +222,32 @@ class GudangController extends Controller
     ]);
   }
 
+  public function inputSeragamDariExcel(Request $request)
+  {
+    $validatedData = $request->validate([
+      'excel-file' => 'required|mimes:xls,xlsx',
+    ]);
+
+    try {
+      Excel::import(new SeragamImport, $request->file('excel-file'));
+
+      return back()->with('create-success', "Berhasil membuat seragam!");
+    } catch (Exception $e) {
+      return back()->with('create-error', $e->getMessage());
+    }
+  }
+
+  public function downloadTemplateExcel()
+  {
+    $filePath = public_path() . '/excel/TEMPLATE DATA BAJU SWK.xlsx';
+
+    return response()->download($filePath);
+  }
+
   public function inputBikinSeragam(Request $request)
   {
     // TODO: Validasi data
-  
+
     $validatedData = $request->validate([
       'jenjang.*' => 'required|in:sd,smp,sma,smk',
       'jenis_kelamin.*' => 'required|in:cowo,cewe',
@@ -233,8 +257,8 @@ class GudangController extends Controller
       'harga' => 'required|numeric|min:1000'
     ]);
 
-    
-  
+
+
 
     try {
       // TODO: Create logic

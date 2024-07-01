@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Helper\StringHelper;
 use App\Models\Order;
+use App\Models\Seragam;
 use Exception;
 use Illuminate\Http\Request;
 use App\Models\Status;
@@ -103,7 +104,7 @@ class UkurController extends Controller
     foreach ($orders as $order) {
       $order->order_masuk = Carbon::parse($order->order_masuk)
         ->setTimezone('Asia/Jakarta')
-        ->format('d/m/y | h:m');
+        ->format('d/m/y | h:i');
     }
 
     return view('ukur.daftar-order', [
@@ -138,7 +139,7 @@ class UkurController extends Controller
   public function bikinOrder()
   {
     $lastOrder = Order::orderBy('id', 'desc')->first();
-    $lastOrderNum = (int) substr($lastOrder->nomor_urut, 1);
+    $lastOrderNum = !is_null($lastOrder) ? (int) substr($lastOrder->nomor_urut, 1) : 0;
 
     $lastOrderNum += 1;
 
@@ -213,13 +214,11 @@ class UkurController extends Controller
         case 'complete':
           return back()->with('create-success', 'Berhasil kirim');
           break;
-        
+
         case 'draft':
           return back()->with('create-success', 'Berhasil simpan');
           break;
       }
-
-      
     } catch (Exception $e) {
       DB::rollBack();
 
@@ -322,6 +321,27 @@ class UkurController extends Controller
     } catch (Exception $e) {
       // return 'Gagal hapus order' . $e->getMessage();
       return back()->with('delete-error', 'Gagal hapus order' . $e->getMessage());
+    }
+  }
+  public function confirmOrder($id)
+  {
+    try {
+      $orderID = Status::where('order_id', $id)
+        ->select('seragam_id', 'kuantitas')
+        ->get()
+        ->toArray();
+
+      foreach ($orderID as $detail) {
+        Seragam::where('id', $detail['seragam_id'])
+          ->decrement('stok', $detail['kuantitas']);
+      }
+
+      Order::where('id', $id)
+        ->update(['status' => 'selesai']);
+
+      return back()->with('confirmed-success', 'Berhasil konfirmasi order');
+    } catch (Exception $e) {
+      return back()->with('confirmed-error', 'Gagal konfirmasi order' . $e->getMessage());
     }
   }
 }
