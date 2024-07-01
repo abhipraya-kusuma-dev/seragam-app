@@ -60,7 +60,7 @@
 
                 <div class="grid grid-cols-1 gap-2 ">
 
-                    <table class="w-[541px]">
+                    <table class="w-[541px] mb-10">
                         <thead>
                             <tr class='divide-x divide-gray-400  border-gray-400 border'>
                                 <th class="px-2 text-left">Nama Barang</th>

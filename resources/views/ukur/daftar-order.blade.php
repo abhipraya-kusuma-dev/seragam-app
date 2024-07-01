@@ -60,8 +60,10 @@
                         @endif
                         <td>
                             <div class="px-2 text-left bg-[#fff] flex space-x-2">
-                                <a href="/ukur/{{ $order->nomor_urut }}/edit" class="text-yellow-500 hover:underline">Edit
-                                    Order</a> <span>|</span>
+                                @if (request()->query('status') != 'selesai')
+                                    <a href="/ukur/{{ $order->nomor_urut }}/edit" class="text-yellow-500 hover:underline">Edit
+                                        Order</a> <span>|</span>
+                                @endif
                                 <a href="/ukur/{{ $order->nomor_urut }}" class="text-sky-600 hover:underline">Lihat
                                     Order</a>
                                 <span>|</span>

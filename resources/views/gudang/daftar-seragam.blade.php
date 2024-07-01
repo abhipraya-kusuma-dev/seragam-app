@@ -112,7 +112,10 @@
                         </script> --}}
                     @endif
                 </div>
-                <form id="create-and-edit-form" action="/gudang/seragam/bikin" class="flex flex-col gap-4" method="POST">
+                <form id="create-and-edit-form" action="/gudang/seragam/bikin" class="flex flex-col gap-4" method="post">
+                    <div id="method-field">
+                        
+                    </div>
                     @csrf
                     <h1 class="font-bold">Jenjang</h1>
                     <div class="flex items-center gap-4">
@@ -197,8 +200,7 @@
                                 class="outline-none border rounded border-black mb-3 px-2 w-57" type="number" />
                         </div>
                     </div>
-
-                    <div class="flex gap-5">
+                    <div class="flex gap-5 mb-2">
                         <button type="submit" id="submit-button"
                             class="w-[181px] h-[59px] bg-[#2BCB4E] text-xl font-bold text-white rounded-xl border-white border"
                             style="box-shadow: 2px 4px 6px 0 gray">Simpan</button>
@@ -206,8 +208,11 @@
                             class="w-[181px] h-[59px] bg-red-600 text-xl font-bold text-white rounded-xl border-white border hidden"
                             style="box-shadow: 2px 4px 6px 0 gray">Cancel Edit</button>
                     </div>
+                    
                 </form>
+                
             </div>
+            
         </div>
 
         <div class="flex flex-col items-scratch">
@@ -386,6 +391,7 @@
                     return document.querySelector(value).textContent
                 }
 
+                
                 const jenjang = getVal(`#jenjang-${seragamId}`).split(',')
                 const jenisKelamin = getVal(`#jenis-kelamin-${seragamId}`).split(',')
 
@@ -409,6 +415,8 @@
 
                 cowo.checked = false
                 cewe.checked = false
+
+
 
                 jenjang.forEach(function(jenjang) {
                     if (jenjang === "sd") {
@@ -434,9 +442,11 @@
                     }
                 })
 
+
             })
 
         })
+
 
 
         cancelButton.addEventListener("click", function() {
