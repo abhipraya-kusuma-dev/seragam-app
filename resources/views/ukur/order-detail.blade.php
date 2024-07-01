@@ -54,13 +54,13 @@
             <h3 class="font-semibold mb-16">{{ $order->nama_lengkap }}</h3>
         </div>
         <div>
-            <form action="/gudang/order/{{ $nomor_urut }}/update" method="POST" class="flex items-start gap-10">
+            <form action="" method="POST" class="flex items-start gap-10">
                 @method('PUT')
                 @csrf
 
-                <div class="grid grid-cols-1 gap-2 ">
+                <div class="grid grid-cols-1 gap-2 flex flex-col">
 
-                    <table class="w-[541px]">
+                    <table class="w-[541px] mb-10">
                         <thead>
                             <tr class='divide-x divide-gray-400  border-gray-400 border'>
                                 <th class="px-2 text-left">Nama Barang</th>
@@ -71,7 +71,7 @@
                         <tbody>
                             @foreach ($order->semua_seragam as $seragam)
                                 <tr data-seragam='{{ $seragam->id }}'
-                                    class='label-seragam divide-x divide-gray-400  border-gray-400 border '>
+                                    class='label-seragam divide-x divide-gray-400  border-gray-400 border mb-3'>
                                     <td class="py-3 px-2 text-left">{{ $seragam->nama_barang }}</td>
                                     <td class="py-3 px-2 text-left">{{ $seragam->ukuran }}</td>
                                     <td class="py-3 px-2 text-left">{{ $seragam->kuantitas }}</td>

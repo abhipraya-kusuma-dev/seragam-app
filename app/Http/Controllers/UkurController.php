@@ -118,7 +118,7 @@ class UkurController extends Controller
   {
     $order = DB::table('orders')
       ->where('nomor_urut', $nomor_urut)
-      ->select('id', 'jenjang', 'nomor_urut', 'nama_lengkap')
+      ->select('id', 'jenjang', 'nomor_urut', 'nama_lengkap', 'status')
       ->first();
 
     $semua_seragam = DB::table('statuses')

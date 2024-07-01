@@ -134,7 +134,6 @@
 
             previousDate = previousDate.toLocaleDateString("id-ID", options)
             tanggalSpan.innerHTML = previousDate;
-
             filterOrderan()
         });
 
