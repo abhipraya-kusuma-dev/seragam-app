@@ -122,6 +122,7 @@
         });
         
         leftArrow.addEventListener('click', function(){
+
             let formattedDate = new Date(datePicker.value);
             let previousDate = new Date(formattedDate.getTime() - 86400000);
 
@@ -135,9 +136,11 @@
             tanggalSpan.innerHTML = previousDate;
 
             filterOrderan()
+            
         });
 
         rightArrow.addEventListener('click', function(){
+
             let formattedDate = new Date(datePicker.value);
             let nextDate = new Date(formattedDate.getTime() + 86400000);
 
@@ -151,6 +154,7 @@
             tanggalSpan.innerHTML = nextDate;
 
             filterOrderan()
+
         });
 
         function getOrderan(){
